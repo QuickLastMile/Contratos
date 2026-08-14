@@ -377,6 +377,20 @@
   .detalle-panel{background:#FCF9F3}.detalle-contenido{max-width:1100px;margin:0 auto}.detalle-cab{padding-left:34px;padding-right:34px}.detalle-grid{gap:10px}.alertas-bloque{background:#F5ECDF}.doc-marco{background:#EEE4D5}
   @media(max-width:900px){.fila-filtros{display:flex}.fila-filtros #chipsProyecto{margin-left:0}.cifras{grid-template-columns:1fr 1fr}}
   @media(max-width:760px){.area-trabajo>header{padding:0 16px 18px}.barra-superior{height:68px;margin-bottom:22px}.barra-superior .sesion-usuario span{display:none}.cab{display:block}.fila-filtros{display:flex}.buscador{width:100%;flex:1 1 100%}.area-trabajo main{padding:24px 16px 45px}.cifras{margin-top:20px}.rejilla{padding-top:14px}.detalle-cab{padding-left:18px;padding-right:18px}}
+
+  /* ── Paleta negro + amarillo y composición solicitada ── */
+  :root{--bg:#F2EFE6;--bg2:#E8E2D4;--tarjeta:#FFFDF7;--linea:#D8D0BE;--linea-suave:#E5DFD1;--tinta:#161616;--tinta-suave:#5F5B52;--tenue:#8B867A;--acento:#F2C230;--acento-claro:#FFD85A;--acento-fondo:#FFF4C7}
+  body{background:#ECE8DE;color:#161616}
+  .area-trabajo>header{gap:0;padding:0 40px 22px;background:#FAF8F2;border-top:6px solid #151515;border-bottom-color:#D8D0BE}
+  .barra-superior{height:86px;margin:0 0 18px;border-color:#DDD6C8}.barra-superior .marca h1{color:#111}.barra-superior .marca p{color:#777267}.superior-acciones{display:flex;align-items:center;gap:20px}.superior-acciones .btn-primario{order:2}.superior-acciones .sesion-usuario{order:1}.barra-superior .sesion-usuario span{color:#4F4B43}.barra-superior .sesion-usuario button{color:#777267}
+  .btn-primario,.btn-principal,.form-inline button{background:#F2C230;color:#111;border:1px solid #D9A900}.btn-primario:hover,.btn-principal:hover,.form-inline button:hover{background:#FFD85A}
+  .cab{display:block;max-width:1380px;margin:0 auto}.titulo-pagina>span{color:#8B6A00}.titulo-pagina h1{color:#111;font:700 37px/1.08 'Source Serif 4',serif;margin:6px 0}.titulo-pagina p{color:#69655D}
+  .cifras{margin-top:20px}.cifra{background:#161616!important;border-color:#161616!important}.cifra b{color:#F2C230}.cifra span{color:#D7D2C6}.cifra::after{background:#555}.cifra.aviso b{color:#FFD34B}.cifra.aviso::after{background:#F2C230}.cifra.alerta b{color:#FF776E}
+  .fila-filtros{border-color:#D8D0BE}.buscador input,.chip{background:#FFFDF8;border-color:#D8D0BE;color:#514D45}.chip.on{background:#161616;border-color:#161616;color:#F2C230}.buscador input:focus{border-color:#D9A900;box-shadow:0 0 0 3px rgba(242,194,48,.22)}
+  .area-trabajo main{background:#ECE8DE}.avatar{background:#161616;color:#F2C230}.enc-proy .n{color:#161616}.enc-proy{border-color:#CDC5B5}
+  .tarjeta,.tarjeta:nth-child(3n+2),.tarjeta:nth-child(3n+3){background:#FFF9E8;border-color:#D3C595;box-shadow:0 10px 24px -22px rgba(0,0,0,.65)}.tarjeta:hover,.tarjeta:nth-child(3n+2):hover,.tarjeta:nth-child(3n+3):hover{background:#FFF4C7;border-color:#C7AD51}.tarjeta h3,.tarjeta .meta b{color:#151515}.tarjeta .acciones button:first-child{background:#161616;color:#F2C230}.tarjeta .acciones button{background:#fff;color:#292929}.tarjeta .abrir-ficha{background:#F2C230;color:#111}
+  .detalle-panel,.modal-caja{background:#FAF8F2}.detalle-cab{background:rgba(250,248,242,.96)}.detalle-cab span,.doc-cab a{color:#846500}.detalle-dato,.alertas-bloque{background:#F3EFDf;border-color:#D8D0BE}.detalle-editar,.modal-btns button.principal,.alertas-form button{background:#161616;color:#F2C230}.detalle-notas{background:#FFF4C7;border-color:#F2C230;color:#484238}.toast{background:#161616;color:#F2C230;border-color:#161616}
+  @media(max-width:760px){.area-trabajo>header{padding:0 16px 18px}.barra-superior{height:auto;min-height:76px;gap:12px}.superior-acciones{gap:10px}.superior-acciones .sesion-usuario{display:none}.superior-acciones .btn-primario{padding:9px 12px}.titulo-pagina h1{font-size:30px}}
 </style>
 </head>
 <body>
@@ -412,9 +426,15 @@
         <img src="https://i.ibb.co/KjmjjvNZ/Captura-de-pantalla-2025-09-15-161315.jpg" alt="Quick Last Mile">
         <div><h1>Gestión de contratos</h1><p>Quick Last Mile</p></div>
       </div>
-      <div class="sesion-usuario">
-        <span id="correoSesion"></span>
-        <button id="btnSalir">Cerrar sesión</button>
+      <div class="superior-acciones">
+        <button class="btn-primario" id="btnNuevoContrato">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+          Nuevo contrato
+        </button>
+        <div class="sesion-usuario">
+          <span id="correoSesion"></span>
+          <button id="btnSalir">Cerrar sesión</button>
+        </div>
       </div>
     </div>
     <div class="cab">
@@ -422,16 +442,6 @@
         <span>GESTIÓN CONTRACTUAL</span>
         <h1>Portafolio contractual</h1>
         <p>Visión consolidada para decisiones, renovaciones y control de riesgo.</p>
-      </div>
-      <div class="acciones-cab">
-        <button class="btn-sec" id="btnRefrescar" title="Volver a leer los datos">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"></path><path d="M21 3v5h-5"></path></svg>
-          Actualizar
-        </button>
-        <button class="btn-primario" id="btnNuevoContrato">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
-          Nuevo contrato
-        </button>
       </div>
     </div>
     <div class="cifras" id="cifras"></div>
@@ -695,8 +705,6 @@ sb.auth.onAuthStateChange((event, session) => {
 
 /* ══════════════ CARGA DE DATOS ══════════════ */
 async function cargarTodo(){
-  const btn = document.getElementById('btnRefrescar');
-  btn.classList.add('cargando');
   try{
     const [rc, rk] = await Promise.all([
       sb.from('v_contratos').select('*').order('fecha_vencimiento', { ascending:true }),
@@ -714,9 +722,7 @@ async function cargarTodo(){
       `<p class="aviso"><b>No se pudieron cargar los contratos.</b><br>
        <small style="color:var(--tenue)">Detalle: ${escapar(e.message)}</small></p>`;
     avisar('Error al cargar datos: ' + e.message, true);
-  }finally{
-    btn.classList.remove('cargando');
-  }
+  }finally{}
 }
 
 async function cargarResponsables(clienteId){
@@ -950,7 +956,6 @@ function pintar(){
 }
 
 document.getElementById('busqueda').addEventListener('input', e => { estado.q = e.target.value; pintar(); });
-document.getElementById('btnRefrescar').onclick = cargarTodo;
 document.getElementById('cerrarDetalle').onclick = cerrarDetalle;
 document.getElementById('modalDetalle').addEventListener('click', e => { if(e.target.id === 'modalDetalle') cerrarDetalle(); });
 
