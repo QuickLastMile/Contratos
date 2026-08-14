@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gestión de Contratos · Quick Last Mile</title>
+<link rel="icon" href="https://i.ibb.co/KjmjjvNZ/Captura-de-pantalla-2025-09-15-161315.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.47.10/dist/umd/supabase.js"></script>
+<style>
+  :root{
+    --amarillo:#F5C400; --amarillo-claro:#FFE066;
+    --fondo:#0A0A0A; --panel:#141414; --borde:#262626;
+    --texto:#F5F1E6; --tenue:#9a9a9a;
+    --ok:#6fd66f; --ambar:#F5C400; --naranja:#f59a3c; --rojo:#e0554f; --azul:#5aa9f5; --gris:#6a6a6a;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:'Manrope',sans-serif; color:var(--texto);
+    min-height:100vh;
+    background:radial-gradient(circle at 15% 0%, #262004 0%, #0A0A0A 42%),
+               linear-gradient(180deg,#0A0A0A 0%, #050505 100%);
+    background-attachment:fixed;
+  }
+  ::selection{background:var(--amarillo); color:#0A0A0A}
+  a{color:var(--amarillo)}
+  ::-webkit-scrollbar{width:10px;height:10px}
+  ::-webkit-scrollbar-track{background:#111}
+  ::-webkit-scrollbar-thumb{background:#3a3a3a;border-radius:10px}
+  button{font:inherit}
+  input,select,textarea{font:inherit}
+
+  /* ── Login ── */
+  #pantallaLogin{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  .login-caja{
+    width:380px;max-width:100%;background:var(--panel);border:1px solid var(--borde);border-radius:20px;
+    padding:30px 26px;text-align:center;
+  }
+  .login-caja img{height:46px;margin-bottom:14px}
+  .login-caja h1{margin:0 0 4px;font-size:18px;color:#fff}
+  .login-caja p{margin:0 0 22px;font-size:13px;color:var(--tenue)}
+  .campo{text-align:left;margin-bottom:12px}
+  .campo label{display:block;font-size:12px;font-weight:700;color:#c9c9c9;margin-bottom:5px}
+  .campo input,.campo select,.campo textarea{
+    width:100%;padding:10px 12px;border-radius:10px;border:1px solid #2c2c2c;
+    background:#0f0f0f;color:#fff;
+  }
+  .campo input:focus,.campo select:focus,.campo textarea:focus{outline:none;box-shadow:0 0 0 2px var(--amarillo)}
+  .campo textarea{resize:vertical;min-height:64px}
+  .btn-principal{
+    width:100%;padding:11px 0;border:none;border-radius:12px;cursor:pointer;font-weight:800;font-size:14px;
+    background:linear-gradient(90deg,var(--amarillo-claro),var(--amarillo));color:#0A0A0A;margin-top:6px;
+  }
+  .btn-principal:disabled{opacity:.6;cursor:default}
+  .login-error{min-height:18px;margin:10px 0 0;font-size:12.5px;color:#e05555;font-weight:600}
+  .login-ayuda{margin-top:16px;font-size:11.5px;color:#6a6a6a;line-height:1.5}
+
+  /* ── App ── */
+  #app{display:none}
+  header{
+    position:sticky; top:0; z-index:20;
+    padding:10px 24px 12px;
+    background:rgba(10,10,10,.92); backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(245,196,0,.18);
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .fila{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .marca{display:flex;align-items:center;gap:11px;margin-right:auto}
+  .marca img{height:38px;width:auto;max-width:110px;object-fit:contain}
+  .marca h1{
+    margin:0;font-size:16px;font-weight:800;letter-spacing:.2px;line-height:1.15;
+    background:linear-gradient(90deg,var(--amarillo-claro),var(--amarillo));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .marca p{margin:2px 0 0;font-size:11.5px;color:var(--tenue)}
+
+  .cifras{display:flex;gap:8px;flex-wrap:wrap}
+  .cifra{
+    display:flex;align-items:baseline;gap:6px;padding:6px 12px;border-radius:999px;
+    background:var(--panel);border:1px solid var(--borde);white-space:nowrap;
+  }
+  .cifra b{font-size:15px;font-weight:800;color:#fff;line-height:1}
+  .cifra span{font-size:11.5px;color:var(--tenue);font-weight:600}
+  .cifra.alerta b{color:var(--rojo)}
+  .cifra.alerta{border-color:rgba(224,85,79,.45)}
+  .cifra.aviso b{color:var(--ambar)}
+  .cifra.aviso{border-color:rgba(245,196,0,.45)}
+
+  .btn-sec{
+    display:flex;align-items:center;gap:7px;padding:8px 13px;border-radius:10px;cursor:pointer;
+    background:var(--panel);border:1px solid #2c2c2c;color:#c9c9c9;font-size:12.5px;font-weight:600;
+  }
+  .btn-sec:hover{border-color:var(--amarillo);color:#fff}
+  .btn-sec.cargando svg{animation:girar .9s linear infinite}
+  @keyframes girar{to{transform:rotate(360deg)}}
+  .btn-amarillo{
+    display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:10px;cursor:pointer;border:none;
+    background:linear-gradient(90deg,var(--amarillo-claro),var(--amarillo));color:#0A0A0A;font-size:12.5px;font-weight:800;
+  }
+
+  .buscador{position:relative;width:270px;flex:0 1 270px}
+  .buscador svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--amarillo)}
+  .buscador input{
+    width:100%;padding:9px 12px 9px 37px;border-radius:10px;border:1px solid #2c2c2c;
+    background:var(--panel);color:#fff;font-size:13.5px;
+  }
+  .buscador input::placeholder{color:#8A8A8A}
+  .buscador input:focus{outline:none;box-shadow:0 0 0 2px var(--amarillo)}
+
+  .chips{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+  .chip{
+    cursor:pointer;user-select:none;font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:999px;
+    background:var(--panel);color:#c9c9c9;border:1px solid #2c2c2c;white-space:nowrap;
+  }
+  .chip.on{background:linear-gradient(90deg,var(--amarillo-claro),var(--amarillo));color:#0A0A0A;font-weight:700;border-color:transparent}
+  .separador{width:1px;height:20px;background:#2c2c2c;margin:0 3px}
+
+  main{padding:22px 24px 48px;max-width:1280px;margin:0 auto}
+
+  section.bloque{margin-bottom:30px}
+  .enc-proy{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .avatar{
+    width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--amarillo),#5c4700);font-weight:800;color:#0A0A0A;font-size:14px;flex:0 0 auto;
+  }
+  .enc-proy .n{font-weight:700;font-size:16px;color:#fff}
+  .enc-proy .c{font-size:12.5px;color:#8a8a8a}
+  .enc-proy .resp{
+    margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--tenue);cursor:pointer;
+    padding:6px 12px;border-radius:999px;background:var(--panel);border:1px solid #2c2c2c;
+  }
+  .enc-proy .resp:hover{border-color:var(--amarillo);color:#fff}
+
+  .rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+  .tarjeta{
+    display:flex;flex-direction:column;border-radius:18px;background:var(--panel);
+    border:1px solid var(--borde);overflow:hidden;position:relative;padding:16px 17px;gap:8px;
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .tarjeta:hover{transform:translateY(-3px);box-shadow:0 14px 28px rgba(245,196,0,.10);border-color:#3a3a3a}
+  .tarjeta .fila-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+  .tarjeta h3{margin:0;font-size:15px;font-weight:700;color:#fff;line-height:1.3}
+  .tarjeta .contraparte{font-size:12px;color:var(--tenue)}
+  .badge{
+    flex:0 0 auto;font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;white-space:nowrap;
+    border:1px solid; letter-spacing:.2px;
+  }
+  .badge.vigente{color:var(--ok);border-color:var(--ok);background:rgba(111,214,111,.08)}
+  .badge.por_vencer{color:var(--ambar);border-color:var(--ambar);background:rgba(245,196,0,.08)}
+  .badge.urgente{color:var(--naranja);border-color:var(--naranja);background:rgba(245,154,60,.1)}
+  .badge.critico{color:var(--rojo);border-color:var(--rojo);background:rgba(224,85,79,.12)}
+  .badge.vencido{color:#fff;border-color:var(--rojo);background:var(--rojo)}
+  .badge.renovado{color:var(--azul);border-color:var(--azul);background:rgba(90,169,245,.1)}
+  .badge.terminado{color:var(--gris);border-color:var(--gris);background:rgba(120,120,120,.1)}
+
+  .meta{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--tenue)}
+  .meta b{color:#e5e5e5;font-weight:700}
+  .notas{font-size:12px;color:#8a8a8a;line-height:1.4;max-height:36px;overflow:hidden}
+  .acciones{margin-top:auto;display:flex;gap:7px;padding-top:8px}
+  .acciones button{
+    flex:1;font-size:12.5px;font-weight:700;padding:8px 0;border-radius:999px;cursor:pointer;
+    background:#1c1c1c;border:1px solid #333;color:#d5d5d5;
+  }
+  .acciones button:hover{border-color:var(--amarillo);color:#fff}
+  .acciones button.eliminar:hover{border-color:var(--rojo);color:var(--rojo)}
+
+  .aviso{color:#8a8a8a;padding:26px 0;font-size:15px}
+  .aviso b{color:#fff}
+  .esqueleto{height:150px;border-radius:18px;background:linear-gradient(90deg,#141414,#1c1c1c,#141414);
+    background-size:200% 100%;animation:brillo 1.2s ease infinite}
+  @keyframes brillo{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+  /* ── Modales ── */
+  .modal-fondo{
+    position:fixed;inset:0;z-index:60;background:rgba(5,5,5,.85);backdrop-filter:blur(4px);
+    display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow:auto;
+  }
+  .modal-fondo.on{display:flex}
+  .modal-caja{
+    width:480px;max-width:100%;background:var(--panel);border:1px solid #2c2c2c;border-radius:20px;
+    padding:22px 24px 24px;
+  }
+  .modal-cab{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .modal-cab h4{margin:0;font-size:16px;color:#fff}
+  .modal-cab button{background:none;border:none;color:var(--tenue);cursor:pointer;font-size:18px}
+  .modal-cab button:hover{color:#fff}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .modal-btns{display:flex;gap:10px;margin-top:18px}
+  .modal-btns button{
+    flex:1;font-size:13.5px;font-weight:700;padding:11px 0;border-radius:12px;cursor:pointer;border:1px solid #333;
+    background:#1c1c1c;color:#d5d5d5;
+  }
+  .modal-btns button.principal{background:linear-gradient(90deg,var(--amarillo-claro),var(--amarillo));color:#0A0A0A;border:none}
+  .modal-btns button.peligro{border-color:var(--rojo);color:var(--rojo)}
+
+  .lista-resp{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+  .fila-resp{
+    display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;background:#0f0f0f;border:1px solid #262626;
+  }
+  .fila-resp .datos{flex:1;overflow:hidden}
+  .fila-resp .nom{font-size:13px;font-weight:700;color:#fff}
+  .fila-resp .mail{font-size:12px;color:var(--tenue);overflow:hidden;text-overflow:ellipsis}
+  .fila-resp button{background:none;border:none;color:var(--tenue);cursor:pointer;font-size:15px;flex:0 0 auto}
+  .fila-resp button:hover{color:var(--rojo)}
+  .form-inline{display:flex;gap:8px}
+  .form-inline input{flex:1}
+  .form-inline button{flex:0 0 auto;padding:0 16px;border-radius:10px;border:none;cursor:pointer;
+    background:linear-gradient(90deg,var(--amarillo-claro),var(--amarillo));color:#0A0A0A;font-weight:800}
+
+  .toast{
+    position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);z-index:80;
+    background:#1c1c1c;border:1px solid var(--ok);color:#fff;font-size:13.5px;font-weight:600;
+    padding:11px 20px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s ease;max-width:90vw;text-align:center;
+  }
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+  .toast.error{border-color:var(--rojo)}
+
+  .sesion-usuario{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--tenue)}
+  .sesion-usuario button{background:none;border:none;color:var(--tenue);cursor:pointer;text-decoration:underline;font-size:12px}
+  .sesion-usuario button:hover{color:#fff}
+
+  @media(max-width:760px){
+    header{padding:10px 16px 12px}
+    main{padding:18px 16px 40px}
+    .marca h1{font-size:14px} .marca p{display:none}
+    .buscador{flex:1 1 100%;width:auto}
+    .cifras{order:3;width:100%}
+    .grid2{grid-template-columns:1fr}
+    .enc-proy .resp{margin-left:0}
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN ══════════════ -->
+<div id="pantallaLogin">
+  <div class="login-caja">
+    <img src="https://i.ibb.co/KjmjjvNZ/Captura-de-pantalla-2025-09-15-161315.jpg" alt="Last Mile">
+    <h1>Gestión de Contratos</h1>
+    <p>Inicia sesión para ver y actualizar los contratos de cada proyecto.</p>
+    <form id="formLogin">
+      <div class="campo">
+        <label>Correo</label>
+        <input id="loginCorreo" type="email" autocomplete="username" required>
+      </div>
+      <div class="campo">
+        <label>Contraseña</label>
+        <input id="loginPass" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn-principal" id="btnLogin" type="submit">Entrar</button>
+      <p class="login-error" id="loginError"></p>
+    </form>
+    <p class="login-ayuda">¿No tienes acceso todavía? Pídele a un administrador que cree tu usuario desde el panel de Supabase.</p>
+  </div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="app">
+  <header>
+    <div class="fila">
+      <div class="marca">
+        <img src="https://i.ibb.co/KjmjjvNZ/Captura-de-pantalla-2025-09-15-161315.jpg" alt="Last Mile">
+        <div>
+          <h1>GESTIÓN DE CONTRATOS</h1>
+          <p>Seguimiento y alertas de vencimiento por proyecto</p>
+        </div>
+      </div>
+      <div class="cifras" id="cifras"></div>
+      <div class="sesion-usuario">
+        <span id="correoSesion"></span>
+        <button id="btnSalir">Cerrar sesión</button>
+      </div>
+      <button class="btn-sec" id="btnRefrescar" title="Volver a leer los datos">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"></path><path d="M21 3v5h-5"></path></svg>
+        Actualizar
+      </button>
+      <button class="btn-amarillo" id="btnNuevoContrato">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0A0A0A" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>
+        Nuevo contrato
+      </button>
+    </div>
+
+    <div class="fila">
+      <div class="buscador">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <input id="busqueda" type="search" placeholder="Buscar contrato, contraparte o proyecto…" autocomplete="off">
+      </div>
+      <div class="chips" id="chipsEstado"></div>
+      <span class="separador"></span>
+      <div class="chips" id="chipsProyecto"></div>
+    </div>
+  </header>
+
+  <main><div id="contenido"></div></main>
+</div>
+
+<!-- ══════════════ MODAL CONTRATO ══════════════ -->
+<div class="modal-fondo" id="modalContrato">
+  <div class="modal-caja">
+    <div class="modal-cab">
+      <h4 id="tituloModalContrato">Nuevo contrato</h4>
+      <button id="cerrarModalContrato">✕</button>
+    </div>
+    <form id="formContrato">
+      <input type="hidden" id="cId">
+      <div class="campo">
+        <label>Proyecto</label>
+        <select id="cCliente" required></select>
+      </div>
+      <div class="campo">
+        <label>Nombre / objeto del contrato</label>
+        <input id="cNombre" required placeholder="Ej. Contrato de servicio de mensajería">
+      </div>
+      <div class="campo">
+        <label>Contraparte / cliente</label>
+        <input id="cContraparte" placeholder="Ej. Cafam">
+      </div>
+      <div class="grid2">
+        <div class="campo">
+          <label>Fecha de inicio</label>
+          <input id="cInicio" type="date">
+        </div>
+        <div class="campo">
+          <label>Fecha de vencimiento</label>
+          <input id="cVencimiento" type="date" required>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="campo">
+          <label>Valor</label>
+          <input id="cValor" type="number" step="0.01" min="0" placeholder="0">
+        </div>
+        <div class="campo">
+          <label>Moneda</label>
+          <select id="cMoneda">
+            <option value="COP">COP</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+      </div>
+      <div class="campo">
+        <label>Estado</label>
+        <select id="cEstado">
+          <option value="vigente">Vigente</option>
+          <option value="renovado">Renovado</option>
+          <option value="terminado">Terminado</option>
+        </select>
+      </div>
+      <div class="campo">
+        <label>Enlace al documento (opcional)</label>
+        <input id="cArchivo" type="url" placeholder="https://drive.google.com/…">
+      </div>
+      <div class="campo">
+        <label>Notas</label>
+        <textarea id="cNotas" placeholder="Observaciones de seguimiento…"></textarea>
+      </div>
+      <div class="modal-btns">
+        <button type="button" class="peligro" id="btnEliminarContrato" style="display:none">Eliminar</button>
+        <button type="submit" class="principal">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════ MODAL RESPONSABLES ══════════════ -->
+<div class="modal-fondo" id="modalResponsables">
+  <div class="modal-caja">
+    <div class="modal-cab">
+      <h4 id="tituloModalResp">Responsables de seguimiento</h4>
+      <button id="cerrarModalResp">✕</button>
+    </div>
+    <p style="margin:0 0 10px;font-size:12.5px;color:var(--tenue)">
+      Estos correos reciben la alerta cuando un contrato de este proyecto esté por vencer.
+    </p>
+    <div class="lista-resp" id="listaResp"></div>
+    <form id="formResp" class="form-inline">
+      <input id="respNombre" placeholder="Nombre (opcional)" style="flex:0 0 40%">
+      <input id="respEmail" type="email" placeholder="correo@ejemplo.com" required>
+      <button type="submit">Agregar</button>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════ MODAL NUEVO PROYECTO ══════════════ -->
+<div class="modal-fondo" id="modalProyecto">
+  <div class="modal-caja" style="width:360px">
+    <div class="modal-cab">
+      <h4>Nuevo proyecto</h4>
+      <button id="cerrarModalProyecto">✕</button>
+    </div>
+    <form id="formProyecto">
+      <div class="campo">
+        <label>Nombre del proyecto</label>
+        <input id="pNombre" required placeholder="Ej. Colsubsidio">
+      </div>
+      <div class="modal-btns">
+        <button type="submit" class="principal">Crear</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────
+   CONFIGURACIÓN SUPABASE
+   ───────────────────────────────────────────────────────────── */
+const SUPABASE_URL = 'https://udjusygblkpnmfdsolkz.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_SbZHNp_wy2UnX8l_f65FMA_6--GQUZu';
+
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true, storageKey: 'contratos_sesion' }
+});
+
+/* ── Estado ── */
+let CONTRATOS = [];
+let CLIENTES = [];
+let RESPONSABLES_CACHE = {}; // cliente_id -> [{id,nombre,email}]
+const estado = { q:'', estado:'todos', proyecto:'todos' };
+let clienteRespActual = null;
+
+const norm = s => (s||'').toString().trim();
+const escapar = s => norm(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const iniciales = s => norm(s).split(/\s+/).map(w=>w[0]||'').slice(0,2).join('').toUpperCase();
+
+function avisar(msg, esError){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('error', !!esError);
+  t.classList.add('on');
+  clearTimeout(avisar._t);
+  avisar._t = setTimeout(() => t.classList.remove('on'), 2600);
+}
+
+function formatoFecha(f){
+  if(!f) return '—';
+  const d = new Date(f + 'T00:00:00');
+  return d.toLocaleDateString('es-CO', { day:'2-digit', month:'short', year:'numeric' });
+}
+function formatoValor(v, moneda){
+  if(v === null || v === undefined || v === '') return '—';
+  try{ return new Intl.NumberFormat('es-CO', { style:'currency', currency: moneda || 'COP', maximumFractionDigits:0 }).format(v); }
+  catch(_){ return `${moneda || 'COP'} ${v}`; }
+}
+
+const ETIQUETAS_ESTADO = {
+  vigente:'Vigente', por_vencer:'Por vencer', urgente:'Urgente', critico:'Crítico',
+  vencido:'Vencido', renovado:'Renovado', terminado:'Terminado'
+};
+
+function textoBadge(c){
+  const d = c.dias_restantes;
+  switch(c.estado_visual){
+    case 'vigente':   return 'Vigente';
+    case 'por_vencer':return `Por vencer · ${d}d`;
+    case 'urgente':   return `Urgente · ${d}d`;
+    case 'critico':   return `Crítico · ${d}d`;
+    case 'vencido':   return `Vencido hace ${Math.abs(d)}d`;
+    case 'renovado':  return 'Renovado';
+    case 'terminado': return 'Terminado';
+    default: return c.estado_visual;
+  }
+}
+
+/* ══════════════ AUTENTICACIÓN ══════════════ */
+async function iniciarSesion(correo, pass){
+  const { data, error } = await sb.auth.signInWithPassword({ email: correo, password: pass });
+  if(error){
+    const m = /invalid login/i.test(error.message) ? 'Correo o contraseña incorrectos' : error.message;
+    return { ok:false, mensaje:m };
+  }
+  return { ok:true, user:data.user };
+}
+
+function mostrarApp(user){
+  document.getElementById('pantallaLogin').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('correoSesion').textContent = user.email;
+  cargarTodo();
+}
+function mostrarLogin(){
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('pantallaLogin').style.display = 'flex';
+}
+
+document.getElementById('formLogin').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('btnLogin');
+  const err = document.getElementById('loginError');
+  err.textContent = '';
+  btn.disabled = true; btn.textContent = 'Entrando…';
+  const r = await iniciarSesion(norm(document.getElementById('loginCorreo').value), document.getElementById('loginPass').value);
+  btn.disabled = false; btn.textContent = 'Entrar';
+  if(!r.ok){ err.textContent = r.mensaje; return; }
+  mostrarApp(r.user);
+});
+
+document.getElementById('btnSalir').onclick = async () => {
+  await sb.auth.signOut();
+  mostrarLogin();
+};
+
+sb.auth.onAuthStateChange((event, session) => {
+  if(session?.user) mostrarApp(session.user);
+  else mostrarLogin();
+});
+
+/* ══════════════ CARGA DE DATOS ══════════════ */
+async function cargarTodo(){
+  const btn = document.getElementById('btnRefrescar');
+  btn.classList.add('cargando');
+  try{
+    const [rc, rk] = await Promise.all([
+      sb.from('v_contratos').select('*').order('fecha_vencimiento', { ascending:true }),
+      sb.from('clientes').select('id,nombre').order('nombre', { ascending:true })
+    ]);
+    if(rc.error) throw rc.error;
+    if(rk.error) throw rk.error;
+    CONTRATOS = rc.data || [];
+    CLIENTES = rk.data || [];
+    llenarSelectClientes();
+    pintarChips();
+    pintar();
+  }catch(e){
+    document.getElementById('contenido').innerHTML =
+      `<p class="aviso"><b>No se pudieron cargar los contratos.</b><br>
+       <small style="color:#5a5a5a">Detalle: ${escapar(e.message)}</small></p>`;
+    avisar('Error al cargar datos: ' + e.message, true);
+  }finally{
+    btn.classList.remove('cargando');
+  }
+}
+
+async function cargarResponsables(clienteId){
+  if(RESPONSABLES_CACHE[clienteId]) return RESPONSABLES_CACHE[clienteId];
+  const { data, error } = await sb.from('contrato_responsables').select('*').eq('cliente_id', clienteId).order('creado_en');
+  if(error){ avisar('No se pudieron cargar los responsables: ' + error.message, true); return []; }
+  RESPONSABLES_CACHE[clienteId] = data || [];
+  return RESPONSABLES_CACHE[clienteId];
+}
+
+function llenarSelectClientes(){
+  const sel = document.getElementById('cCliente');
+  sel.innerHTML = CLIENTES.map(c => `<option value="${c.id}">${escapar(c.nombre)}</option>`).join('')
+    + `<option value="__nuevo__">+ Nuevo proyecto…</option>`;
+}
+
+/* ══════════════ FILTROS Y RENDER ══════════════ */
+function filtrar(){
+  const q = estado.q.trim().toLowerCase();
+  return CONTRATOS.filter(c => {
+    if(estado.estado !== 'todos' && c.estado_visual !== estado.estado) return false;
+    if(estado.proyecto !== 'todos' && c.cliente_id !== estado.proyecto) return false;
+    if(!q) return true;
+    return [c.nombre, c.contraparte, c.proyecto, c.notas].join(' ').toLowerCase().includes(q);
+  });
+}
+
+function pintarCifras(){
+  const total = CONTRATOS.length;
+  const vencidos = CONTRATOS.filter(c => c.estado_visual === 'vencido').length;
+  const proximos = CONTRATOS.filter(c => ['por_vencer','urgente','critico'].includes(c.estado_visual)).length;
+  const vigentes = CONTRATOS.filter(c => c.estado_visual === 'vigente').length;
+  document.getElementById('cifras').innerHTML = `
+    <div class="cifra"><b>${total}</b><span>contratos</span></div>
+    <div class="cifra"><b>${vigentes}</b><span>vigentes</span></div>
+    <div class="cifra ${proximos ? 'aviso' : ''}"><b>${proximos}</b><span>por vencer</span></div>
+    <div class="cifra ${vencidos ? 'alerta' : ''}"><b>${vencidos}</b><span>vencidos</span></div>`;
+}
+
+function pintarChips(){
+  const cont = document.getElementById('chipsEstado');
+  const estados = ['todos','vigente','por_vencer','urgente','critico','vencido','renovado','terminado'];
+  cont.innerHTML = estados.map(e =>
+    `<span class="chip ${estado.estado===e?'on':''}" data-estado="${e}">${e==='todos'?'Todos':ETIQUETAS_ESTADO[e]}</span>`).join('');
+  cont.querySelectorAll('[data-estado]').forEach(el =>
+    el.onclick = () => { estado.estado = el.dataset.estado; pintarChips(); pintar(); });
+
+  const contP = document.getElementById('chipsProyecto');
+  contP.innerHTML = [{id:'todos',nombre:'Todos los proyectos'}, ...CLIENTES].map(c =>
+    `<span class="chip ${estado.proyecto===c.id?'on':''}" data-proy="${c.id}">${escapar(c.nombre)}</span>`).join('');
+  contP.querySelectorAll('[data-proy]').forEach(el =>
+    el.onclick = () => { estado.proyecto = el.dataset.proy; pintarChips(); pintar(); });
+}
+
+function tarjeta(c){
+  return `
+  <article class="tarjeta" data-id="${c.id}">
+    <div class="fila-top">
+      <h3>${escapar(c.nombre)}</h3>
+      <span class="badge ${c.estado_visual}">${textoBadge(c)}</span>
+    </div>
+    ${c.contraparte ? `<div class="contraparte">${escapar(c.contraparte)}</div>` : ''}
+    <div class="meta">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
+      <span>Vence: <b>${formatoFecha(c.fecha_vencimiento)}</b></span>
+    </div>
+    <div class="meta">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+      <span>Valor: <b>${formatoValor(c.valor, c.moneda)}</b></span>
+    </div>
+    ${c.notas ? `<div class="notas">${escapar(c.notas)}</div>` : ''}
+    <div class="acciones">
+      <button data-editar="${c.id}">Editar</button>
+      ${c.archivo_url ? `<button data-abrir="${c.id}">Ver doc</button>` : ''}
+    </div>
+  </article>`;
+}
+
+function pintar(){
+  const lista = filtrar();
+  const cont = document.getElementById('contenido');
+  pintarCifras();
+
+  if(!CLIENTES.length){
+    cont.innerHTML = `<p class="aviso"><b>Aún no hay proyectos creados.</b><br>Usa "Nuevo contrato" → "+ Nuevo proyecto…" para crear el primero.</p>`;
+    return;
+  }
+  if(!lista.length){
+    cont.innerHTML = `<p class="aviso">No se encontraron contratos con esos filtros.</p>`;
+    return;
+  }
+
+  const mapa = new Map();
+  lista.forEach(c => { if(!mapa.has(c.cliente_id)) mapa.set(c.cliente_id, []); mapa.get(c.cliente_id).push(c); });
+  const orden = [...mapa.keys()].sort((a,b) => {
+    const na = mapa.get(a)[0].proyecto, nb = mapa.get(b)[0].proyecto;
+    return na.localeCompare(nb);
+  });
+
+  cont.innerHTML = orden.map(cid => {
+    const items = mapa.get(cid);
+    const nombreProy = items[0].proyecto;
+    return `<section class="bloque">
+      <div class="enc-proy">
+        <div class="avatar">${iniciales(nombreProy)}</div>
+        <div>
+          <div class="n">${escapar(nombreProy)}</div>
+          <div class="c">${items.length} contrato${items.length !== 1 ? 's' : ''}</div>
+        </div>
+        <span class="resp" data-resp="${cid}">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+          Responsables
+        </span>
+      </div>
+      <div class="rejilla">${items.map(tarjeta).join('')}</div>
+    </section>`;
+  }).join('');
+
+  cont.querySelectorAll('[data-editar]').forEach(el => el.onclick = () => abrirModalContrato(el.dataset.editar));
+  cont.querySelectorAll('[data-abrir]').forEach(el => el.onclick = () => {
+    const c = CONTRATOS.find(x => x.id === el.dataset.abrir);
+    if(c?.archivo_url) window.open(c.archivo_url, '_blank', 'noopener');
+  });
+  cont.querySelectorAll('[data-resp]').forEach(el => el.onclick = () => abrirModalResponsables(el.dataset.resp));
+}
+
+document.getElementById('busqueda').addEventListener('input', e => { estado.q = e.target.value; pintar(); });
+document.getElementById('btnRefrescar').onclick = cargarTodo;
+
+/* ══════════════ MODAL CONTRATO ══════════════ */
+function abrirModalContrato(id){
+  const form = document.getElementById('formContrato');
+  form.reset();
+  document.getElementById('cId').value = '';
+  document.getElementById('btnEliminarContrato').style.display = 'none';
+  document.getElementById('cMoneda').value = 'COP';
+  document.getElementById('cEstado').value = 'vigente';
+
+  if(id){
+    const c = CONTRATOS.find(x => x.id === id);
+    if(!c) return;
+    document.getElementById('tituloModalContrato').textContent = 'Editar contrato';
+    document.getElementById('cId').value = c.id;
+    document.getElementById('cCliente').value = c.cliente_id;
+    document.getElementById('cNombre').value = c.nombre || '';
+    document.getElementById('cContraparte').value = c.contraparte || '';
+    document.getElementById('cInicio').value = c.fecha_inicio || '';
+    document.getElementById('cVencimiento').value = c.fecha_vencimiento || '';
+    document.getElementById('cValor').value = c.valor ?? '';
+    document.getElementById('cMoneda').value = c.moneda || 'COP';
+    document.getElementById('cEstado').value = c.estado || 'vigente';
+    document.getElementById('cArchivo').value = c.archivo_url || '';
+    document.getElementById('cNotas').value = c.notas || '';
+    document.getElementById('btnEliminarContrato').style.display = 'block';
+  }else{
+    document.getElementById('tituloModalContrato').textContent = 'Nuevo contrato';
+    if(estado.proyecto !== 'todos') document.getElementById('cCliente').value = estado.proyecto;
+  }
+  document.getElementById('modalContrato').classList.add('on');
+}
+function cerrarModalContrato(){ document.getElementById('modalContrato').classList.remove('on'); }
+
+document.getElementById('btnNuevoContrato').onclick = () => abrirModalContrato(null);
+document.getElementById('cerrarModalContrato').onclick = cerrarModalContrato;
+document.getElementById('modalContrato').addEventListener('click', e => { if(e.target.id === 'modalContrato') cerrarModalContrato(); });
+
+document.getElementById('cCliente').addEventListener('change', e => {
+  if(e.target.value === '__nuevo__'){
+    document.getElementById('modalProyecto').classList.add('on');
+    e.target.value = '';
+  }
+});
+
+document.getElementById('formContrato').addEventListener('submit', async e => {
+  e.preventDefault();
+  const id = document.getElementById('cId').value;
+  const payload = {
+    cliente_id: document.getElementById('cCliente').value,
+    nombre: norm(document.getElementById('cNombre').value),
+    contraparte: norm(document.getElementById('cContraparte').value) || null,
+    fecha_inicio: document.getElementById('cInicio').value || null,
+    fecha_vencimiento: document.getElementById('cVencimiento').value,
+    valor: document.getElementById('cValor').value ? Number(document.getElementById('cValor').value) : null,
+    moneda: document.getElementById('cMoneda').value,
+    estado: document.getElementById('cEstado').value,
+    archivo_url: norm(document.getElementById('cArchivo').value) || null,
+    notas: norm(document.getElementById('cNotas').value) || null
+  };
+  if(!payload.cliente_id){ avisar('Selecciona un proyecto', true); return; }
+
+  const { error } = id
+    ? await sb.from('contratos').update(payload).eq('id', id)
+    : await sb.from('contratos').insert(payload);
+
+  if(error){ avisar('No se pudo guardar: ' + error.message, true); return; }
+  avisar(id ? 'Contrato actualizado' : 'Contrato creado');
+  cerrarModalContrato();
+  cargarTodo();
+});
+
+document.getElementById('btnEliminarContrato').onclick = async () => {
+  const id = document.getElementById('cId').value;
+  if(!id || !confirm('¿Eliminar este contrato? Esta acción no se puede deshacer.')) return;
+  const { error } = await sb.from('contratos').delete().eq('id', id);
+  if(error){ avisar('No se pudo eliminar: ' + error.message, true); return; }
+  avisar('Contrato eliminado');
+  cerrarModalContrato();
+  cargarTodo();
+};
+
+/* ══════════════ MODAL RESPONSABLES ══════════════ */
+async function abrirModalResponsables(clienteId){
+  clienteRespActual = clienteId;
+  const c = CLIENTES.find(x => x.id === clienteId);
+  document.getElementById('tituloModalResp').textContent = `Responsables · ${c ? c.nombre : ''}`;
+  document.getElementById('formResp').reset();
+  await pintarResponsables(clienteId);
+  document.getElementById('modalResponsables').classList.add('on');
+}
+function cerrarModalResponsables(){ document.getElementById('modalResponsables').classList.remove('on'); }
+
+async function pintarResponsables(clienteId){
+  delete RESPONSABLES_CACHE[clienteId];
+  const lista = await cargarResponsables(clienteId);
+  const cont = document.getElementById('listaResp');
+  cont.innerHTML = lista.length
+    ? lista.map(r => `
+      <div class="fila-resp">
+        <div class="datos">
+          <div class="nom">${escapar(r.nombre || r.email)}</div>
+          ${r.nombre ? `<div class="mail">${escapar(r.email)}</div>` : ''}
+        </div>
+        <button data-quitar="${r.id}" title="Quitar">✕</button>
+      </div>`).join('')
+    : `<p style="font-size:12.5px;color:var(--tenue)">Sin responsables asignados todavía.</p>`;
+
+  cont.querySelectorAll('[data-quitar]').forEach(el => el.onclick = async () => {
+    const { error } = await sb.from('contrato_responsables').delete().eq('id', el.dataset.quitar);
+    if(error){ avisar('No se pudo quitar: ' + error.message, true); return; }
+    pintarResponsables(clienteId);
+  });
+}
+
+document.getElementById('cerrarModalResp').onclick = cerrarModalResponsables;
+document.getElementById('modalResponsables').addEventListener('click', e => { if(e.target.id === 'modalResponsables') cerrarModalResponsables(); });
+
+document.getElementById('formResp').addEventListener('submit', async e => {
+  e.preventDefault();
+  const nombre = norm(document.getElementById('respNombre').value) || null;
+  const email = norm(document.getElementById('respEmail').value);
+  const { error } = await sb.from('contrato_responsables').insert({ cliente_id: clienteRespActual, nombre, email });
+  if(error){ avisar('No se pudo agregar: ' + error.message, true); return; }
+  document.getElementById('formResp').reset();
+  pintarResponsables(clienteRespActual);
+});
+
+/* ══════════════ MODAL NUEVO PROYECTO ══════════════ */
+document.getElementById('cerrarModalProyecto').onclick = () => document.getElementById('modalProyecto').classList.remove('on');
+document.getElementById('modalProyecto').addEventListener('click', e => { if(e.target.id === 'modalProyecto') e.currentTarget.classList.remove('on'); });
+
+document.getElementById('formProyecto').addEventListener('submit', async e => {
+  e.preventDefault();
+  const nombre = norm(document.getElementById('pNombre').value);
+  const { data, error } = await sb.from('clientes').insert({ nombre }).select('id,nombre').single();
+  if(error){ avisar('No se pudo crear el proyecto: ' + error.message, true); return; }
+  CLIENTES.push(data);
+  CLIENTES.sort((a,b) => a.nombre.localeCompare(b.nombre));
+  llenarSelectClientes();
+  pintarChips();
+  document.getElementById('cCliente').value = data.id;
+  document.getElementById('pNombre').value = '';
+  document.getElementById('modalProyecto').classList.remove('on');
+  avisar('Proyecto creado: ' + data.nombre);
+});
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    cerrarModalContrato(); cerrarModalResponsables();
+    document.getElementById('modalProyecto').classList.remove('on');
+  }
+});
+</script>
+</body>
+</html>
