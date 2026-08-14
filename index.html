@@ -342,6 +342,21 @@
   .columna-etiqueta{display:block;color:#607571;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
   @media(max-width:1050px){.barra-lateral{width:190px}.area-trabajo{margin-left:190px}.area-trabajo>header,.area-trabajo main{padding-left:24px;padding-right:24px}.tarjeta{grid-template-columns:1.4fr 1fr 1fr}.tarjeta .acciones{display:none}}
   @media(max-width:760px){.barra-lateral{position:relative;width:100%;height:auto;padding:14px 16px;display:block}.barra-lateral .marca{border:0;padding:0}.menu-ejecutivo,.lateral-pie{display:none}.area-trabajo{margin-left:0}.area-trabajo>header{padding:25px 16px 18px}.cab{display:block}.titulo-pagina h1{font-size:30px}.acciones-cab{margin-top:20px}.cifras{grid-template-columns:1fr 1fr}.cifra{min-height:90px}.fila-filtros{grid-template-columns:1fr}.fila-filtros #chipsProyecto{grid-column:auto}.area-trabajo main{padding:6px 16px 40px}.tarjeta{grid-template-columns:1fr auto;gap:12px}.tarjeta .meta{grid-column:1}.tarjeta .acciones{display:flex;grid-column:1/-1}.tarjeta .abrir-ficha{grid-column:2;grid-row:1/4}.enc-proy .resp{margin-left:auto}}
+
+  /* ── Interfaz cálida inspirada en el sistema de accesos rápidos ── */
+  :root{--bg:#F3EBDD;--bg2:#EDE1CE;--tarjeta:#FFFDF8;--linea:#DDCDB5;--linea-suave:#E7DAC6;--tinta:#2A1D18;--tinta-suave:#725E50;--tenue:#9A8778;--acento:#6D392A;--acento-claro:#87503F;--acento-fondo:#EFE2D2}
+  body{background:linear-gradient(135deg,#F8F2E8 0%,#EEE2D0 100%);color:var(--tinta)}
+  .barra-lateral{width:82px;padding:20px 12px;background:#FFFCF6;border-color:#E1D2BC;align-items:center}.barra-lateral .marca{padding:0 0 24px;border-color:#E4D6C2}.barra-lateral .marca img{width:48px;height:48px}.barra-lateral .marca div{display:none}.menu-ejecutivo{width:100%;align-items:center}.menu-ejecutivo span{display:grid;place-items:center;width:56px;height:56px;padding:0;font-size:25px;border-radius:16px;color:#795C4A}.menu-ejecutivo span.activo{background:#556D5E;color:#fff}.lateral-pie{width:100%;padding:18px 0 0}.lateral-pie .sesion-usuario small,.lateral-pie .sesion-usuario span{display:none}.lateral-pie .sesion-usuario{align-items:center}.lateral-pie button{font-size:0;width:46px;height:46px;border-radius:14px;background:#EFE4D1;text-decoration:none}.lateral-pie button::after{content:"↗";font-size:18px;color:#6D392A}
+  .area-trabajo{margin-left:82px}.area-trabajo>header{padding:30px 42px 20px;background:#FFFCF7;border-bottom:1px solid #E1D2BC}.titulo-pagina>span{color:#A07D68}.titulo-pagina h1{font-size:35px;color:#2A1D18}.titulo-pagina p{color:#927D6C}.btn-sec{background:#FFFDF8;border-color:#DDCDB5;color:#725E50}.btn-primario{background:#6D392A;color:#fff}.btn-primario:hover{background:#87503F}
+  .cifras{margin-top:3px}.cifra{min-height:92px;background:#F4EBDD;border:1px solid #DDCDB5!important}.cifra b{color:#6D392A;margin-bottom:15px}.cifra span{color:#8C7565}.cifra::after{background:#B99F8A}
+  .fila-filtros{border-color:#E1D2BC}.buscador input,.chip{background:#FFFDF8;border-color:#DDCDB5;color:#725E50}.chip.on{background:#6D392A;border-color:#6D392A;color:#fff}.buscador input:focus{border-color:#9C725D;box-shadow:0 0 0 3px rgba(109,57,42,.09)}
+  .area-trabajo main{padding-top:25px}.enc-proy{border:0;padding:0 2px 14px}.enc-proy .n{color:#2A1D18;font-size:15px}.enc-proy .c{color:#9A8778}.avatar{background:#556D5E;color:#fff}.enc-proy .resp{background:#FFFDF8;border:1px solid #DDCDB5;color:#725E50;padding:8px 13px}
+  section.bloque{background:transparent;border:0;overflow:visible}.rejilla{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+  .tarjeta{display:flex;flex-direction:column;align-items:stretch;gap:12px;min-height:260px;padding:20px;background:linear-gradient(145deg,#E8D8C4,#D9B8A3);border:1px solid rgba(255,255,255,.9);border-radius:20px;box-shadow:0 12px 28px -22px #624332}.tarjeta:nth-child(3n+2){background:linear-gradient(145deg,#E9DDC8,#C9B8A1)}.tarjeta:nth-child(3n+3){background:linear-gradient(145deg,#E8C6AE,#CE947C)}.tarjeta::before{display:none}.tarjeta:hover{transform:translateY(-3px);background:linear-gradient(145deg,#EEDFCC,#DAB49D);border-color:#fff;box-shadow:0 18px 35px -22px #624332}.tarjeta .fila-top{display:block}.tarjeta h3{color:#2A1D18;font-size:17px;line-height:1.3}.tarjeta .contraparte{color:#795F50}.tarjeta .meta{color:#745D4E;margin-top:2px}.tarjeta .meta b{color:#2A1D18}.tarjeta .acciones{margin-top:auto;padding:8px 0 0;min-width:0;display:flex}.tarjeta .acciones button{background:#FFFDF8;border:0;color:#6D392A;border-radius:10px}.tarjeta .acciones button:first-child{background:#6D392A;color:#fff}.tarjeta .abrir-ficha{background:#FFFDF8;color:#6D392A;border-radius:10px;width:36px;height:34px;flex:0 0 auto}.columna-etiqueta{color:#8A6D5C}.badge{float:right}.badge.critico{color:#A8322B;background:#F7D8D2}
+  .modal-caja{background:#FFFCF7;border-color:#DDCDB5}.modal-cab h4,.campo input,.campo select,.campo textarea{color:#2A1D18}.campo input,.campo select,.campo textarea,.modal-btns button,.fila-resp{background:#FFFDF8;border-color:#DDCDB5}.modal-btns button.principal{background:#6D392A}.toast{background:#6D392A;color:#fff;border-color:#6D392A}
+  .detalle-fondo{justify-content:center;align-items:flex-start;padding:26px;background:rgba(49,30,23,.68)}.detalle-panel{width:min(1180px,100%);min-height:calc(100vh - 52px);border:1px solid #E0D0B8;border-radius:22px;background:#FFFCF7;color:#2A1D18;box-shadow:0 32px 90px rgba(37,20,14,.35)}.detalle-cab{background:rgba(255,252,247,.96);border-color:#E2D4C0;border-radius:22px 22px 0 0}.detalle-cab span{color:#94745F}.detalle-cerrar{background:#F2E7D6;border-color:#DDCDB5;color:#6D392A}.detalle-contenido{padding:38px 42px 55px}.detalle-titulo{color:#2A1D18;font-size:38px;max-width:820px}.detalle-sub{color:#8D7564}.detalle-grid{grid-template-columns:repeat(3,1fr)}.detalle-dato{background:#F2E8D8;border-color:#E0D0B8}.detalle-dato small{color:#9B806C}.detalle-dato b{color:#2A1D18}.detalle-notas{background:#F0E4D2;border-color:#6D392A;color:#6D5546}.doc-cab h3{color:#2A1D18}.doc-cab a{color:#6D392A}.doc-marco{background:#E9DDCB;border-color:#D8C4A9;height:560px}.doc-vacio{border-color:#D8C4A9;color:#9A8778}.detalle-editar{background:#6D392A;color:#fff}.detalle-cerrar2{background:#FFFDF8;color:#725E50;border-color:#DDCDB5}
+  .alertas-bloque{margin:28px 0;padding:22px;border:1px solid #DDCDB5;border-radius:16px;background:#FFF9EF}.alertas-cab{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:16px}.alertas-cab h3{margin:0 0 5px;color:#2A1D18;font:700 17px 'Manrope'}.alertas-cab p{margin:0;color:#9A8778;font-size:12px}.alertas-lista{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.alerta-correo{display:flex;align-items:center;gap:9px;padding:8px 10px;background:#F0E4D2;border-radius:10px;color:#6D5546;font-size:12px}.alerta-correo button{border:0;background:transparent;color:#B24B3E;cursor:pointer}.alertas-form{display:flex;gap:8px}.alertas-form input{flex:1;padding:10px 12px;border:1px solid #DDCDB5;border-radius:10px;background:#fff;color:#2A1D18}.alertas-form button{padding:10px 16px;border:0;border-radius:10px;background:#6D392A;color:#fff;font-weight:800;cursor:pointer}
+  @media(max-width:760px){.barra-lateral{width:100%;display:flex;align-items:flex-start}.area-trabajo{margin:0}.area-trabajo>header{padding:24px 16px}.detalle-fondo{padding:0}.detalle-panel{min-height:100vh;border-radius:0}.detalle-contenido{padding:25px 18px}.detalle-grid{grid-template-columns:1fr}.alertas-form{flex-direction:column}.rejilla{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -375,10 +390,8 @@
       <img src="https://i.ibb.co/KjmjjvNZ/Captura-de-pantalla-2025-09-15-161315.jpg" alt="Last Mile">
       <div><h1>CONTRATOS</h1><p>Quick Last Mile</p></div>
     </div>
-    <nav class="menu-ejecutivo">
-      <span class="activo"><b>01</b> Portafolio</span>
-      <span><b>02</b> Vencimientos</span>
-      <span><b>03</b> Documentos</span>
+    <nav class="menu-ejecutivo" aria-label="Navegación principal">
+      <span class="activo" title="Contratos">▦</span>
     </nav>
     <div class="lateral-pie">
       <div class="sesion-usuario">
@@ -391,7 +404,7 @@
   <header>
     <div class="cab">
       <div class="titulo-pagina">
-        <span>CONTROL CORPORATIVO / 2026</span>
+        <span>GESTIÓN CONTRACTUAL</span>
         <h1>Portafolio contractual</h1>
         <p>Visión consolidada para decisiones, renovaciones y control de riesgo.</p>
       </div>
@@ -737,7 +750,10 @@ function pintarChips(){
     el.onclick = () => { estado.estado = el.dataset.estado; pintarChips(); pintar(); });
 
   const contP = document.getElementById('chipsProyecto');
-  contP.innerHTML = [{id:'todos',nombre:'Todos los proyectos'}, ...CLIENTES].map(c =>
+  const idsConContratos = new Set(CONTRATOS.map(c => c.cliente_id));
+  const proyectosActivos = CLIENTES.filter(c => idsConContratos.has(c.id));
+  if(estado.proyecto !== 'todos' && !idsConContratos.has(estado.proyecto)) estado.proyecto = 'todos';
+  contP.innerHTML = [{id:'todos',nombre:'Todos los proyectos'}, ...proyectosActivos].map(c =>
     `<span class="chip ${estado.proyecto===c.id?'on':''}" data-proy="${c.id}">${escapar(c.nombre)}</span>`).join('');
   contP.querySelectorAll('[data-proy]').forEach(el =>
     el.onclick = () => { estado.proyecto = el.dataset.proy; pintarChips(); pintar(); });
@@ -814,11 +830,48 @@ async function abrirDetalle(id){
       <div class="detalle-dato"><small>Contraparte</small><b>${escapar(c.contraparte || 'No registrada')}</b></div>
     </div>
     ${c.notas ? `<div class="detalle-notas"><b>Notas y alcance</b><br>${escapar(c.notas)}</div>` : ''}
+    <section class="alertas-bloque">
+      <div class="alertas-cab"><div><h3>Destinatarios de alertas</h3><p>Estas personas recibirán los avisos de vencimiento de este proyecto.</p></div></div>
+      <div class="alertas-lista" id="detalleAlertasLista"><span style="color:var(--tenue);font-size:12px">Cargando correos…</span></div>
+      <form class="alertas-form" id="detalleAlertasForm">
+        <input id="detalleAlertaNombre" placeholder="Nombre (opcional)">
+        <input id="detalleAlertaEmail" type="email" placeholder="correo@empresa.com" required>
+        <button type="submit">+ Agregar correo</button>
+      </form>
+    </section>
     <div class="doc-cab"><h3>Documento contractual</h3>${docUrl ? `<a href="${escapar(docUrl)}" target="_blank" rel="noopener">Abrir en otra pestaña ↗</a>` : ''}</div>
     ${visorDocumento(docUrl,c)}
     <div class="detalle-acciones"><button class="detalle-cerrar2" id="detalleVolver">Cerrar</button><button class="detalle-editar" id="detalleEditar">Editar contrato</button></div>`;
   document.getElementById('detalleVolver').onclick = cerrarDetalle;
   document.getElementById('detalleEditar').onclick = () => { cerrarDetalle(); abrirModalContrato(c.id); };
+  document.getElementById('detalleAlertasForm').onsubmit = async e => {
+    e.preventDefault();
+    const nombre = norm(document.getElementById('detalleAlertaNombre').value) || null;
+    const email = norm(document.getElementById('detalleAlertaEmail').value);
+    const { error } = await sb.from('contrato_responsables').insert({ cliente_id:c.cliente_id, nombre, email });
+    if(error){ avisar('No se pudo agregar el correo: ' + error.message, true); return; }
+    e.target.reset();
+    await pintarAlertasDetalle(c.cliente_id);
+    avisar('Correo agregado a las alertas');
+  };
+  await pintarAlertasDetalle(c.cliente_id);
+}
+
+async function pintarAlertasDetalle(clienteId){
+  const cont = document.getElementById('detalleAlertasLista');
+  if(!cont) return;
+  delete RESPONSABLES_CACHE[clienteId];
+  const lista = await cargarResponsables(clienteId);
+  if(!document.getElementById('detalleAlertasLista')) return;
+  cont.innerHTML = lista.length ? lista.map(r => `
+    <span class="alerta-correo">${escapar(r.nombre || r.email)}${r.nombre ? ` · ${escapar(r.email)}` : ''}
+      <button type="button" data-quitar-alerta="${r.id}" title="Quitar correo">✕</button>
+    </span>`).join('') : `<span style="color:var(--tenue);font-size:12px">Aún no hay correos configurados.</span>`;
+  cont.querySelectorAll('[data-quitar-alerta]').forEach(btn => btn.onclick = async () => {
+    const { error } = await sb.from('contrato_responsables').delete().eq('id',btn.dataset.quitarAlerta);
+    if(error){ avisar('No se pudo quitar el correo: ' + error.message,true); return; }
+    await pintarAlertasDetalle(clienteId);
+  });
 }
 
 function cerrarDetalle(){
@@ -857,10 +910,6 @@ function pintar(){
           <div class="n">${escapar(nombreProy)}</div>
           <div class="c">${items.length} contrato${items.length !== 1 ? 's' : ''}</div>
         </div>
-        <span class="resp" data-resp="${cid}">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
-          Responsables
-        </span>
       </div>
       <div class="rejilla">${items.map(tarjeta).join('')}</div>
     </section>`;
