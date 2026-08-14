@@ -357,6 +357,26 @@
   .detalle-fondo{justify-content:center;align-items:flex-start;padding:26px;background:rgba(49,30,23,.68)}.detalle-panel{width:min(1180px,100%);min-height:calc(100vh - 52px);border:1px solid #E0D0B8;border-radius:22px;background:#FFFCF7;color:#2A1D18;box-shadow:0 32px 90px rgba(37,20,14,.35)}.detalle-cab{background:rgba(255,252,247,.96);border-color:#E2D4C0;border-radius:22px 22px 0 0}.detalle-cab span{color:#94745F}.detalle-cerrar{background:#F2E7D6;border-color:#DDCDB5;color:#6D392A}.detalle-contenido{padding:38px 42px 55px}.detalle-titulo{color:#2A1D18;font-size:38px;max-width:820px}.detalle-sub{color:#8D7564}.detalle-grid{grid-template-columns:repeat(3,1fr)}.detalle-dato{background:#F2E8D8;border-color:#E0D0B8}.detalle-dato small{color:#9B806C}.detalle-dato b{color:#2A1D18}.detalle-notas{background:#F0E4D2;border-color:#6D392A;color:#6D5546}.doc-cab h3{color:#2A1D18}.doc-cab a{color:#6D392A}.doc-marco{background:#E9DDCB;border-color:#D8C4A9;height:560px}.doc-vacio{border-color:#D8C4A9;color:#9A8778}.detalle-editar{background:#6D392A;color:#fff}.detalle-cerrar2{background:#FFFDF8;color:#725E50;border-color:#DDCDB5}
   .alertas-bloque{margin:28px 0;padding:22px;border:1px solid #DDCDB5;border-radius:16px;background:#FFF9EF}.alertas-cab{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:16px}.alertas-cab h3{margin:0 0 5px;color:#2A1D18;font:700 17px 'Manrope'}.alertas-cab p{margin:0;color:#9A8778;font-size:12px}.alertas-lista{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.alerta-correo{display:flex;align-items:center;gap:9px;padding:8px 10px;background:#F0E4D2;border-radius:10px;color:#6D5546;font-size:12px}.alerta-correo button{border:0;background:transparent;color:#B24B3E;cursor:pointer}.alertas-form{display:flex;gap:8px}.alertas-form input{flex:1;padding:10px 12px;border:1px solid #DDCDB5;border-radius:10px;background:#fff;color:#2A1D18}.alertas-form button{padding:10px 16px;border:0;border-radius:10px;background:#6D392A;color:#fff;font-weight:800;cursor:pointer}
   @media(max-width:760px){.barra-lateral{width:100%;display:flex;align-items:flex-start}.area-trabajo{margin:0}.area-trabajo>header{padding:24px 16px}.detalle-fondo{padding:0}.detalle-panel{min-height:100vh;border-radius:0}.detalle-contenido{padding:25px 18px}.detalle-grid{grid-template-columns:1fr}.alertas-form{flex-direction:column}.rejilla{grid-template-columns:1fr}}
+
+  /* ── Sistema final: interfaz clara, funcional y sin navegación ficticia ── */
+  body{background:#F1E9DD}
+  .area-trabajo{margin:0;min-height:100vh}
+  .area-trabajo>header{padding:0 40px 24px;background:#FBF8F2;border-bottom:1px solid #DCCDB9}
+  .barra-superior{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #E4D8C7;margin-bottom:30px}
+  .barra-superior .marca{display:flex;align-items:center;gap:12px}.barra-superior .marca img{width:40px;height:40px;border-radius:11px}.barra-superior .marca h1{margin:0;font:800 14px 'Manrope';color:#2A1D18}.barra-superior .marca p{margin:2px 0 0;font-size:10px;color:#9A8778;text-transform:uppercase;letter-spacing:1px}
+  .barra-superior .sesion-usuario{align-items:flex-end}.barra-superior .sesion-usuario span{color:#725E50;font-size:11px}.barra-superior .sesion-usuario button{color:#9A7160;text-decoration:none;font-weight:700}
+  .cab{max-width:1380px;margin:0 auto;align-items:flex-end}.titulo-pagina>span{color:#9B6B56}.titulo-pagina h1{font-size:34px;margin-top:7px}.titulo-pagina p{font-size:12px}
+  .cifras{max-width:1380px;margin:24px auto 0;grid-template-columns:repeat(4,minmax(150px,1fr));gap:10px}.cifra{min-height:82px;padding:15px 17px;background:#EDE1D0!important;border-color:#D9C7AF!important}.cifra b{font:800 25px/1 'Manrope';margin-bottom:12px}.cifra span{font-size:9px}.cifra::after{top:15px;right:15px;width:7px;height:7px}
+  .fila-filtros{max-width:1380px;margin:20px auto 0;display:flex;align-items:center;gap:8px;padding-top:17px}.buscador{width:310px;flex:0 0 310px}.fila-filtros #chipsProyecto{margin-left:auto}.chip{font-size:10.5px;padding:7px 11px}
+  .area-trabajo main{max-width:1460px;margin:0 auto;padding:30px 40px 65px}
+  section.bloque{margin-bottom:36px}.enc-proy{padding:0 0 13px;border-bottom:1px solid #D8C8B3}.enc-proy .n{font-size:15px}.enc-proy .c{font-size:11px}.avatar{width:34px;height:34px;border-radius:10px;background:#52685A}
+  .rejilla{grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;padding-top:16px}
+  .tarjeta,.tarjeta:nth-child(3n+2),.tarjeta:nth-child(3n+3){min-height:250px;padding:19px;background:#E3D3BF;border:1px solid #CDB89E;border-radius:17px;box-shadow:0 10px 24px -22px rgba(68,41,27,.75)}
+  .tarjeta:hover,.tarjeta:nth-child(3n+2):hover,.tarjeta:nth-child(3n+3):hover{background:#E8D8C5;border-color:#BDA285;transform:translateY(-3px);box-shadow:0 16px 30px -22px rgba(68,41,27,.65)}
+  .tarjeta .fila-top{position:relative;padding-right:0}.tarjeta .badge{float:none;display:inline-block;margin:12px 0 0}.tarjeta h3{font-size:17px;max-width:90%}.tarjeta .meta{padding-top:2px}.tarjeta .acciones{gap:7px}.tarjeta .acciones button{min-height:36px}.tarjeta .acciones button:first-child{background:#6D392A}.tarjeta .abrir-ficha{height:36px}
+  .detalle-panel{background:#FCF9F3}.detalle-contenido{max-width:1100px;margin:0 auto}.detalle-cab{padding-left:34px;padding-right:34px}.detalle-grid{gap:10px}.alertas-bloque{background:#F5ECDF}.doc-marco{background:#EEE4D5}
+  @media(max-width:900px){.fila-filtros{display:flex}.fila-filtros #chipsProyecto{margin-left:0}.cifras{grid-template-columns:1fr 1fr}}
+  @media(max-width:760px){.area-trabajo>header{padding:0 16px 18px}.barra-superior{height:68px;margin-bottom:22px}.barra-superior .sesion-usuario span{display:none}.cab{display:block}.fila-filtros{display:flex}.buscador{width:100%;flex:1 1 100%}.area-trabajo main{padding:24px 16px 45px}.cifras{margin-top:20px}.rejilla{padding-top:14px}.detalle-cab{padding-left:18px;padding-right:18px}}
 </style>
 </head>
 <body>
@@ -385,23 +405,18 @@
 
 <!-- ══════════════ APP ══════════════ -->
 <div id="app">
-  <aside class="barra-lateral">
-    <div class="marca">
-      <img src="https://i.ibb.co/KjmjjvNZ/Captura-de-pantalla-2025-09-15-161315.jpg" alt="Last Mile">
-      <div><h1>CONTRATOS</h1><p>Quick Last Mile</p></div>
-    </div>
-    <nav class="menu-ejecutivo" aria-label="Navegación principal">
-      <span class="activo" title="Contratos">▦</span>
-    </nav>
-    <div class="lateral-pie">
+  <div class="area-trabajo">
+  <header>
+    <div class="barra-superior">
+      <div class="marca">
+        <img src="https://i.ibb.co/KjmjjvNZ/Captura-de-pantalla-2025-09-15-161315.jpg" alt="Quick Last Mile">
+        <div><h1>Gestión de contratos</h1><p>Quick Last Mile</p></div>
+      </div>
       <div class="sesion-usuario">
-        <small>Sesión activa</small><span id="correoSesion"></span>
+        <span id="correoSesion"></span>
         <button id="btnSalir">Cerrar sesión</button>
       </div>
     </div>
-  </aside>
-  <div class="area-trabajo">
-  <header>
     <div class="cab">
       <div class="titulo-pagina">
         <span>GESTIÓN CONTRACTUAL</span>
