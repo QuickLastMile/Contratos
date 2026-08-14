@@ -351,7 +351,12 @@
         </select>
       </div>
       <div class="campo">
-        <label>Enlace al documento (opcional)</label>
+        <label>Documento del contrato (opcional)</label>
+        <input id="cArchivoFile" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+        <p id="cArchivoActual" style="margin:6px 0 0;font-size:12px;color:var(--tenue)"></p>
+      </div>
+      <div class="campo">
+        <label>…o pega un enlace externo (Drive, etc.)</label>
         <input id="cArchivo" type="url" placeholder="https://drive.google.com/…">
       </div>
       <div class="campo">
@@ -607,7 +612,7 @@ function tarjeta(c){
     ${c.notas ? `<div class="notas">${escapar(c.notas)}</div>` : ''}
     <div class="acciones">
       <button data-editar="${c.id}">Editar</button>
-      ${c.archivo_url ? `<button data-abrir="${c.id}">Ver doc</button>` : ''}
+      ${(c.archivo_path || c.archivo_url) ? `<button data-abrir="${c.id}">Ver doc</button>` : ''}
     </div>
   </article>`;
 }
@@ -653,9 +658,16 @@ function pintar(){
   }).join('');
 
   cont.querySelectorAll('[data-editar]').forEach(el => el.onclick = () => abrirModalContrato(el.dataset.editar));
-  cont.querySelectorAll('[data-abrir]').forEach(el => el.onclick = () => {
+  cont.querySelectorAll('[data-abrir]').forEach(el => el.onclick = async () => {
     const c = CONTRATOS.find(x => x.id === el.dataset.abrir);
-    if(c?.archivo_url) window.open(c.archivo_url, '_blank', 'noopener');
+    if(!c) return;
+    if(c.archivo_path){
+      const { data, error } = await sb.storage.from('contratos').createSignedUrl(c.archivo_path, 300);
+      if(error){ avisar('No se pudo abrir el documento: ' + error.message, true); return; }
+      window.open(data.signedUrl, '_blank', 'noopener');
+    }else if(c.archivo_url){
+      window.open(c.archivo_url, '_blank', 'noopener');
+    }
   });
   cont.querySelectorAll('[data-resp]').forEach(el => el.onclick = () => abrirModalResponsables(el.dataset.resp));
 }
@@ -687,9 +699,13 @@ function abrirModalContrato(id){
     document.getElementById('cEstado').value = c.estado || 'vigente';
     document.getElementById('cArchivo').value = c.archivo_url || '';
     document.getElementById('cNotas').value = c.notas || '';
+    document.getElementById('cArchivoActual').textContent = c.archivo_path
+      ? 'Ya tiene un documento subido. Elige un archivo para reemplazarlo.'
+      : '';
     document.getElementById('btnEliminarContrato').style.display = 'block';
   }else{
     document.getElementById('tituloModalContrato').textContent = 'Nuevo contrato';
+    document.getElementById('cArchivoActual').textContent = '';
     if(estado.proyecto !== 'todos') document.getElementById('cCliente').value = estado.proyecto;
   }
   document.getElementById('modalContrato').classList.add('on');
@@ -710,8 +726,15 @@ document.getElementById('cCliente').addEventListener('change', e => {
 document.getElementById('formContrato').addEventListener('submit', async e => {
   e.preventDefault();
   const id = document.getElementById('cId').value;
+  const cliente_id = document.getElementById('cCliente').value;
+  if(!cliente_id){ avisar('Selecciona un proyecto', true); return; }
+
+  const btnGuardar = e.target.querySelector('button[type="submit"]');
+  btnGuardar.disabled = true;
+  const textoOriginal = btnGuardar.textContent;
+
   const payload = {
-    cliente_id: document.getElementById('cCliente').value,
+    cliente_id,
     nombre: norm(document.getElementById('cNombre').value),
     contraparte: norm(document.getElementById('cContraparte').value) || null,
     fecha_inicio: document.getElementById('cInicio').value || null,
@@ -722,11 +745,27 @@ document.getElementById('formContrato').addEventListener('submit', async e => {
     archivo_url: norm(document.getElementById('cArchivo').value) || null,
     notas: norm(document.getElementById('cNotas').value) || null
   };
-  if(!payload.cliente_id){ avisar('Selecciona un proyecto', true); return; }
 
+  const archivo = document.getElementById('cArchivoFile').files[0];
+  if(archivo){
+    btnGuardar.textContent = 'Subiendo documento…';
+    const limpio = archivo.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const ruta = `${cliente_id}/${Date.now()}-${limpio}`;
+    const { error: errSubida } = await sb.storage.from('contratos').upload(ruta, archivo, { upsert: false });
+    if(errSubida){
+      avisar('No se pudo subir el documento: ' + errSubida.message, true);
+      btnGuardar.disabled = false; btnGuardar.textContent = textoOriginal;
+      return;
+    }
+    payload.archivo_path = ruta;
+  }
+
+  btnGuardar.textContent = 'Guardando…';
   const { error } = id
     ? await sb.from('contratos').update(payload).eq('id', id)
     : await sb.from('contratos').insert(payload);
+
+  btnGuardar.disabled = false; btnGuardar.textContent = textoOriginal;
 
   if(error){ avisar('No se pudo guardar: ' + error.message, true); return; }
   avisar(id ? 'Contrato actualizado' : 'Contrato creado');
