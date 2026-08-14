@@ -319,6 +319,29 @@
   .doc-marco{height:480px;border:1px solid #365057;border-radius:16px;overflow:hidden;background:#091619}.doc-marco iframe,.doc-marco img{display:block;width:100%;height:100%;border:0;object-fit:contain}.doc-vacio{height:180px;display:grid;place-items:center;text-align:center;color:#7F9290;padding:25px;border:1px dashed #365057;border-radius:16px}
   .detalle-acciones{display:flex;gap:10px;margin-top:24px}.detalle-acciones button{flex:1;padding:12px;border-radius:12px;font-weight:800;cursor:pointer}.detalle-editar{background:var(--acento);color:#102014;border:0}.detalle-cerrar2{background:#152D31;color:#B8C4C2;border:1px solid #365057}
   @media(max-width:760px){.detalle-grid{grid-template-columns:1fr}.detalle-contenido{padding:22px 18px 36px}.detalle-titulo{font-size:26px}.doc-marco{height:390px}}
+
+  /* ── Rediseño estructural: cockpit ejecutivo ── */
+  #app{min-height:100vh}
+  .barra-lateral{position:fixed;inset:0 auto 0 0;width:242px;padding:26px 20px;background:#071215;border-right:1px solid #21363B;display:flex;flex-direction:column;z-index:30}
+  .barra-lateral .marca{padding:0 8px 28px;border-bottom:1px solid #21363B}.barra-lateral .marca h1{font:800 13px 'Manrope';letter-spacing:1.8px}.barra-lateral .marca p{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#637875}
+  .menu-ejecutivo{display:flex;flex-direction:column;gap:5px;margin-top:30px}.menu-ejecutivo span{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:10px;color:#647976;font-size:12px;font-weight:700}.menu-ejecutivo span b{font-size:9px;letter-spacing:1px;color:#3F5552}.menu-ejecutivo span.activo{color:#fff;background:#13282C}.menu-ejecutivo span.activo b{color:var(--acento)}
+  .lateral-pie{margin-top:auto;padding:18px 8px 0;border-top:1px solid #21363B}.lateral-pie .sesion-usuario{align-items:flex-start;white-space:normal;width:100%}.lateral-pie small{color:#607370;text-transform:uppercase;font-size:9px;letter-spacing:1px}.lateral-pie span{max-width:100%;overflow:hidden;text-overflow:ellipsis;color:#AAB9B7}.lateral-pie button{margin-top:8px;color:#768A87;text-decoration:none}
+  .area-trabajo{margin-left:242px;min-height:100vh}
+  .area-trabajo>header{position:relative;top:auto;padding:42px 42px 22px;background:transparent;border:0;backdrop-filter:none;gap:27px}
+  .cab{display:flex;justify-content:space-between;align-items:flex-start}.titulo-pagina>span{font-size:9px;letter-spacing:1.7px;color:var(--acento);font-weight:800}.titulo-pagina h1{font-size:38px;line-height:1.05;margin:8px 0 7px;color:#fff}.titulo-pagina p{margin:0;color:#718481;font-size:13px}
+  .acciones-cab{padding-top:4px}.btn-sec,.btn-primario{height:43px;border-radius:12px}
+  .cifras{display:grid;grid-template-columns:repeat(4,1fr);width:100%;padding:0;background:transparent;border:0;gap:12px}
+  .cifra{position:relative;display:block;min-height:104px;padding:18px 19px;background:#11262A;border:1px solid #284147!important;border-radius:15px}.cifra:last-child{border-right:1px solid #284147}.cifra b{display:block;font:700 30px/1 'Source Serif 4';margin-bottom:20px}.cifra span{display:block;font-size:9px;text-align:left}.cifra::after{content:"";position:absolute;right:17px;top:17px;width:8px;height:8px;border-radius:50%;background:#4A625E}.cifra.aviso::after{background:#FFC857}.cifra.alerta::after{background:#FF6B63}
+  .fila-filtros{display:grid;grid-template-columns:minmax(240px,1fr) 2fr;gap:12px;padding-top:18px;border-top:1px solid #21383D}.buscador{width:100%;flex:none}.chips{gap:6px}.fila-filtros>.separador{display:none}.fila-filtros #chipsProyecto{grid-column:1/-1}.chip{padding:7px 12px;font-size:11px}
+  .area-trabajo main{max-width:none;padding:12px 42px 60px}
+  section.bloque{margin:0 0 28px;border:1px solid #263E43;border-radius:18px;background:rgba(13,31,35,.62);overflow:hidden}
+  .enc-proy{margin:0;padding:17px 20px;border-bottom:1px solid #263E43}.avatar{width:32px;height:32px;border-radius:8px;font-size:10px}.enc-proy .n{font-size:14px}.enc-proy .c{font-size:10px}.enc-proy .resp{background:transparent;border:0;padding:7px;color:#78908C}
+  .rejilla{display:flex;flex-direction:column;gap:0}
+  .tarjeta{display:grid;grid-template-columns:minmax(230px,1.5fr) minmax(145px,.8fr) minmax(160px,.8fr) auto;align-items:center;gap:22px;min-height:0;padding:18px 20px;background:transparent;border:0;border-bottom:1px solid #20383D;border-radius:0;box-shadow:none}
+  .tarjeta:last-child{border-bottom:0}.tarjeta::before{inset:12px auto 12px 0;width:2px;border-radius:2px;opacity:0}.tarjeta:hover{transform:none;background:#142B2F;border-color:#20383D;box-shadow:none}.tarjeta:hover::before{opacity:1}.tarjeta .fila-top{display:block}.tarjeta h3{font-size:14px;margin-bottom:5px}.tarjeta .contraparte{font-size:11px;margin-top:0}.tarjeta .meta{font-size:11px}.tarjeta .notas{display:none}.tarjeta .acciones{padding:0;margin:0;min-width:144px}.tarjeta .acciones button{padding:8px 10px;font-size:10px;border-color:#30494E}.tarjeta .abrir-ficha{width:34px;height:34px;display:grid;place-items:center;border-radius:50%;background:#20383D;color:var(--acento);font-size:16px;font-weight:700}.tarjeta .badge{display:inline-block;margin-top:8px}
+  .columna-etiqueta{display:block;color:#607571;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+  @media(max-width:1050px){.barra-lateral{width:190px}.area-trabajo{margin-left:190px}.area-trabajo>header,.area-trabajo main{padding-left:24px;padding-right:24px}.tarjeta{grid-template-columns:1.4fr 1fr 1fr}.tarjeta .acciones{display:none}}
+  @media(max-width:760px){.barra-lateral{position:relative;width:100%;height:auto;padding:14px 16px;display:block}.barra-lateral .marca{border:0;padding:0}.menu-ejecutivo,.lateral-pie{display:none}.area-trabajo{margin-left:0}.area-trabajo>header{padding:25px 16px 18px}.cab{display:block}.titulo-pagina h1{font-size:30px}.acciones-cab{margin-top:20px}.cifras{grid-template-columns:1fr 1fr}.cifra{min-height:90px}.fila-filtros{grid-template-columns:1fr}.fila-filtros #chipsProyecto{grid-column:auto}.area-trabajo main{padding:6px 16px 40px}.tarjeta{grid-template-columns:1fr auto;gap:12px}.tarjeta .meta{grid-column:1}.tarjeta .acciones{display:flex;grid-column:1/-1}.tarjeta .abrir-ficha{grid-column:2;grid-row:1/4}.enc-proy .resp{margin-left:auto}}
 </style>
 </head>
 <body>
@@ -347,21 +370,32 @@
 
 <!-- ══════════════ APP ══════════════ -->
 <div id="app">
+  <aside class="barra-lateral">
+    <div class="marca">
+      <img src="https://i.ibb.co/KjmjjvNZ/Captura-de-pantalla-2025-09-15-161315.jpg" alt="Last Mile">
+      <div><h1>CONTRATOS</h1><p>Quick Last Mile</p></div>
+    </div>
+    <nav class="menu-ejecutivo">
+      <span class="activo"><b>01</b> Portafolio</span>
+      <span><b>02</b> Vencimientos</span>
+      <span><b>03</b> Documentos</span>
+    </nav>
+    <div class="lateral-pie">
+      <div class="sesion-usuario">
+        <small>Sesión activa</small><span id="correoSesion"></span>
+        <button id="btnSalir">Cerrar sesión</button>
+      </div>
+    </div>
+  </aside>
+  <div class="area-trabajo">
   <header>
     <div class="cab">
-      <div class="marca">
-        <img src="https://i.ibb.co/KjmjjvNZ/Captura-de-pantalla-2025-09-15-161315.jpg" alt="Last Mile">
-        <div>
-          <h1>Gestión de Contratos</h1>
-          <p>Seguimiento y alertas de vencimiento por proyecto</p>
-        </div>
+      <div class="titulo-pagina">
+        <span>CONTROL CORPORATIVO / 2026</span>
+        <h1>Portafolio contractual</h1>
+        <p>Visión consolidada para decisiones, renovaciones y control de riesgo.</p>
       </div>
-      <div class="cifras" id="cifras"></div>
       <div class="acciones-cab">
-        <div class="sesion-usuario">
-          <span id="correoSesion"></span>
-          <button id="btnSalir">Cerrar sesión</button>
-        </div>
         <button class="btn-sec" id="btnRefrescar" title="Volver a leer los datos">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"></path><path d="M21 3v5h-5"></path></svg>
           Actualizar
@@ -372,7 +406,7 @@
         </button>
       </div>
     </div>
-
+    <div class="cifras" id="cifras"></div>
     <div class="fila-filtros">
       <div class="buscador">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
@@ -385,6 +419,7 @@
   </header>
 
   <main><div id="contenido"></div></main>
+  </div>
 </div>
 
 <!-- ══════════════ MODAL CONTRATO ══════════════ -->
@@ -712,22 +747,21 @@ function tarjeta(c){
   return `
   <article class="tarjeta" data-id="${c.id}">
     <div class="fila-top">
+      <span class="columna-etiqueta">Contrato</span>
       <h3>${escapar(c.nombre)}</h3>
+      ${c.contraparte ? `<div class="contraparte">${escapar(c.contraparte)}</div>` : ''}
       <span class="badge ${c.estado_visual}">${textoBadge(c)}</span>
     </div>
-    ${c.contraparte ? `<div class="contraparte">${escapar(c.contraparte)}</div>` : ''}
     <div class="meta">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
-      <span>Vence: <b>${formatoFecha(c.fecha_vencimiento)}</b></span>
+      <span><small class="columna-etiqueta">Vencimiento</small><b>${formatoFecha(c.fecha_vencimiento)}</b></span>
     </div>
     <div class="meta">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
-      <span>Valor: <b>${formatoValor(c.valor, c.moneda)}</b></span>
+      <span><small class="columna-etiqueta">Valor contractual</small><b>${formatoValor(c.valor, c.moneda)}</b></span>
     </div>
-    ${c.notas ? `<div class="notas">${escapar(c.notas)}</div>` : ''}
     <div class="acciones">
       <button data-editar="${c.id}">Editar</button>
       ${(c.archivo_path || c.archivo_url) ? `<button data-abrir="${c.id}">Ver doc</button>` : ''}
+      <span class="abrir-ficha" title="Abrir ficha">→</span>
     </div>
   </article>`;
 }
