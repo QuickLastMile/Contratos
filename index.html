@@ -391,6 +391,7 @@
   .tarjeta,.tarjeta:nth-child(3n+2),.tarjeta:nth-child(3n+3){background:#FFF9E8;border-color:#D3C595;box-shadow:0 10px 24px -22px rgba(0,0,0,.65)}.tarjeta:hover,.tarjeta:nth-child(3n+2):hover,.tarjeta:nth-child(3n+3):hover{background:#FFF4C7;border-color:#C7AD51}.tarjeta h3,.tarjeta .meta b{color:#151515}.tarjeta .acciones button:first-child{background:#161616;color:#F2C230}.tarjeta .acciones button{background:#fff;color:#292929}.tarjeta .abrir-ficha{background:#F2C230;color:#111}
   .detalle-panel,.modal-caja{background:#FAF8F2}.detalle-cab{background:rgba(250,248,242,.96)}.detalle-cab span,.doc-cab a{color:#846500}.detalle-dato,.alertas-bloque{background:#F3EFDf;border-color:#D8D0BE}.detalle-editar,.modal-btns button.principal,.alertas-form button{background:#161616;color:#F2C230}.detalle-notas{background:#FFF4C7;border-color:#F2C230;color:#484238}.toast{background:#161616;color:#F2C230;border-color:#161616}
   @media(max-width:760px){.area-trabajo>header{padding:0 16px 18px}.barra-superior{height:auto;min-height:76px;gap:12px}.superior-acciones{gap:10px}.superior-acciones .sesion-usuario{display:none}.superior-acciones .btn-primario{padding:9px 12px}.titulo-pagina h1{font-size:30px}}
+  .form-seccion{margin:18px 0 10px;padding-top:15px;border-top:1px solid #D8D0BE;color:#171717;font:800 11px 'Manrope';text-transform:uppercase;letter-spacing:.9px}
 </style>
 </head>
 <body>
@@ -463,7 +464,7 @@
     <form id="formContrato">
       <input type="hidden" id="cId">
       <div class="campo">
-        <label>Proyecto</label>
+        <label>Cliente</label>
         <select id="cCliente" required></select>
       </div>
       <div class="campo">
@@ -477,7 +478,7 @@
       <div class="grid2">
         <div class="campo">
           <label>Fecha de inicio</label>
-          <input id="cInicio" type="date">
+          <input id="cInicio" type="date" required>
         </div>
         <div class="campo">
           <label>Fecha de vencimiento</label>
@@ -498,12 +499,16 @@
         </div>
       </div>
       <div class="campo">
-        <label>Estado</label>
-        <select id="cEstado">
-          <option value="vigente">Vigente</option>
-          <option value="renovado">Renovado</option>
-          <option value="terminado">Terminado</option>
+        <label>Renovación automática</label>
+        <select id="cRenovacion">
+          <option value="false">No · enviar alerta para revisión</option>
+          <option value="true">Sí · generar documento y solicitar aprobación 15 días antes</option>
         </select>
+      </div>
+      <div class="campo" id="campoPlantilla" style="display:none">
+        <label>Plantilla Word para renovación automática</label>
+        <input id="cPlantillaFile" type="file" accept=".docx">
+        <p class="archivo-nota">Debe contener {{fecha_inicio}} y {{fecha_fin}}. Se conservará el formato original.</p>
       </div>
       <div class="campo">
         <label>Documento del contrato (opcional)</label>
@@ -557,16 +562,24 @@
 
 <!-- ══════════════ MODAL NUEVO PROYECTO ══════════════ -->
 <div class="modal-fondo" id="modalProyecto">
-  <div class="modal-caja" style="width:360px">
+  <div class="modal-caja" style="width:620px">
     <div class="modal-cab">
-      <h4>Nuevo proyecto</h4>
+      <h4>Nuevo cliente</h4>
       <button id="cerrarModalProyecto">✕</button>
     </div>
     <form id="formProyecto">
       <div class="campo">
-        <label>Nombre del proyecto</label>
+        <label>Cliente</label>
         <input id="pNombre" required placeholder="Ej. Colsubsidio">
       </div>
+      <h5 class="form-seccion">Líder del contrato</h5>
+      <div class="grid2"><div class="campo"><label>Nombre</label><input id="pLiderNombre" required></div><div class="campo"><label>Cédula</label><input id="pLiderCedula" required></div></div>
+      <div class="campo"><label>Correo</label><input id="pLiderEmail" type="email" required></div>
+      <h5 class="form-seccion">Jefe responsable</h5>
+      <div class="grid2"><div class="campo"><label>Nombre</label><input id="pJefeNombre" required></div><div class="campo"><label>Cédula</label><input id="pJefeCedula" required></div></div>
+      <div class="campo"><label>Correo</label><input id="pJefeEmail" type="email" required></div>
+      <h5 class="form-seccion">Correos del cliente</h5>
+      <div class="campo"><label>Uno o varios correos</label><textarea id="pClienteEmails" required placeholder="cliente1@empresa.com, cliente2@empresa.com"></textarea><p class="archivo-nota">Sepáralos con coma o escribe uno por línea.</p></div>
       <div class="modal-btns">
         <button type="submit" class="principal">Crear</button>
       </div>
@@ -602,6 +615,7 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
 let CONTRATOS = [];
 let CLIENTES = [];
 let RESPONSABLES_CACHE = {}; // cliente_id -> [{id,nombre,email}]
+let BACKEND_RENOVACIONES = true;
 const estado = { q:'', estado:'todos', proyecto:'todos' };
 let clienteRespActual = null;
 
@@ -699,10 +713,12 @@ sb.auth.onAuthStateChange((event, session) => {
 /* ══════════════ CARGA DE DATOS ══════════════ */
 async function cargarTodo(){
   try{
-    const [rc, rk] = await Promise.all([
-      sb.from('v_contratos').select('*').order('fecha_vencimiento', { ascending:true }),
-      sb.from('clientes').select('id,nombre').order('nombre', { ascending:true })
-    ]);
+    let rc = await sb.from('v_contratos_v2').select('*').order('fecha_vencimiento', { ascending:true });
+    if(rc.error){
+      BACKEND_RENOVACIONES = false;
+      rc = await sb.from('v_contratos').select('*').order('fecha_vencimiento', { ascending:true });
+    }else BACKEND_RENOVACIONES = true;
+    const rk = await sb.from('clientes').select('id,nombre').order('nombre', { ascending:true });
     if(rc.error) throw rc.error;
     if(rk.error) throw rk.error;
     CONTRATOS = rc.data || [];
@@ -720,7 +736,7 @@ async function cargarTodo(){
 
 async function cargarResponsables(clienteId){
   if(RESPONSABLES_CACHE[clienteId]) return RESPONSABLES_CACHE[clienteId];
-  const { data, error } = await sb.from('contrato_responsables').select('*').eq('cliente_id', clienteId).order('creado_en');
+  const { data, error } = await sb.from('contrato_contactos').select('*').eq('cliente_id', clienteId).order('creado_en');
   if(error){ avisar('No se pudieron cargar los responsables: ' + error.message, true); return []; }
   RESPONSABLES_CACHE[clienteId] = data || [];
   return RESPONSABLES_CACHE[clienteId];
@@ -795,6 +811,11 @@ function tarjeta(c){
     </div>
   </article>`;
 }
+function mesesEntre(inicio,fin){
+  if(!inicio || !fin) return 12;
+  const a=new Date(inicio+'T00:00:00'), b=new Date(fin+'T00:00:00');
+  return Math.max(1,Math.round((b-a)/2629800000));
+}
 
 function etiquetaEstado(c){
   return ETIQUETAS_ESTADO[c.estado_visual] || ETIQUETAS_ESTADO[c.estado] || 'Sin estado';
@@ -862,7 +883,7 @@ async function abrirDetalle(id){
     e.preventDefault();
     const nombre = norm(document.getElementById('detalleAlertaNombre').value) || null;
     const email = norm(document.getElementById('detalleAlertaEmail').value);
-    const { error } = await sb.from('contrato_responsables').insert({ cliente_id:c.cliente_id, nombre, email });
+    const { error } = await sb.from('contrato_contactos').insert({ cliente_id:c.cliente_id, rol:'cliente', nombre, email });
     if(error){ avisar('No se pudo agregar el correo: ' + error.message, true); return; }
     e.target.reset();
     await pintarAlertasDetalle(c.cliente_id);
@@ -878,11 +899,11 @@ async function pintarAlertasDetalle(clienteId){
   const lista = await cargarResponsables(clienteId);
   if(!document.getElementById('detalleAlertasLista')) return;
   cont.innerHTML = lista.length ? lista.map(r => `
-    <span class="alerta-correo">${escapar(r.nombre || r.email)}${r.nombre ? ` · ${escapar(r.email)}` : ''}
-      <button type="button" data-quitar-alerta="${r.id}" title="Quitar correo">✕</button>
+    <span class="alerta-correo"><b>${r.rol==='lider'?'Líder':r.rol==='jefe'?'Jefe':'Cliente'}</b> · ${escapar(r.nombre || r.email)}${r.nombre ? ` · ${escapar(r.email)}` : ''}
+      ${r.rol==='cliente'?`<button type="button" data-quitar-alerta="${r.id}" title="Quitar correo">✕</button>`:''}
     </span>`).join('') : `<span style="color:var(--tenue);font-size:12px">Aún no hay correos configurados.</span>`;
   cont.querySelectorAll('[data-quitar-alerta]').forEach(btn => btn.onclick = async () => {
-    const { error } = await sb.from('contrato_responsables').delete().eq('id',btn.dataset.quitarAlerta);
+    const { error } = await sb.from('contrato_contactos').delete().eq('id',btn.dataset.quitarAlerta);
     if(error){ avisar('No se pudo quitar el correo: ' + error.message,true); return; }
     await pintarAlertasDetalle(clienteId);
   });
@@ -959,7 +980,8 @@ function abrirModalContrato(id){
   document.getElementById('cId').value = '';
   document.getElementById('btnEliminarContrato').style.display = 'none';
   document.getElementById('cMoneda').value = 'COP';
-  document.getElementById('cEstado').value = 'vigente';
+  document.getElementById('cRenovacion').value = 'false';
+  document.getElementById('campoPlantilla').style.display = 'none';
   document.getElementById('cArchivoPreview').style.display = 'none';
 
   if(id){
@@ -974,7 +996,8 @@ function abrirModalContrato(id){
     document.getElementById('cVencimiento').value = c.fecha_vencimiento || '';
     document.getElementById('cValor').value = c.valor ?? '';
     document.getElementById('cMoneda').value = c.moneda || 'COP';
-    document.getElementById('cEstado').value = c.estado || 'vigente';
+    document.getElementById('cRenovacion').value = c.renovacion_automatica ? 'true' : 'false';
+    document.getElementById('campoPlantilla').style.display = c.renovacion_automatica ? 'block' : 'none';
     document.getElementById('cArchivo').value = c.archivo_url || '';
     document.getElementById('cNotas').value = c.notas || '';
     document.getElementById('cArchivoActual').textContent = c.archivo_path
@@ -1000,6 +1023,9 @@ document.getElementById('cCliente').addEventListener('change', e => {
     e.target.value = '';
   }
 });
+document.getElementById('cRenovacion').addEventListener('change', e => {
+  document.getElementById('campoPlantilla').style.display = e.target.value === 'true' ? 'block' : 'none';
+});
 
 document.getElementById('cArchivoFile').addEventListener('change', e => {
   const f = e.target.files[0];
@@ -1019,6 +1045,7 @@ document.getElementById('cArchivoQuitar').onclick = () => {
 
 document.getElementById('formContrato').addEventListener('submit', async e => {
   e.preventDefault();
+  if(!BACKEND_RENOVACIONES){ avisar('Primero debe aplicarse la migración de renovaciones en Supabase',true); return; }
   const id = document.getElementById('cId').value;
   const cliente_id = document.getElementById('cCliente').value;
   if(!cliente_id){ avisar('Selecciona un proyecto', true); return; }
@@ -1035,7 +1062,9 @@ document.getElementById('formContrato').addEventListener('submit', async e => {
     fecha_vencimiento: document.getElementById('cVencimiento').value,
     valor: document.getElementById('cValor').value ? Number(document.getElementById('cValor').value) : null,
     moneda: document.getElementById('cMoneda').value,
-    estado: document.getElementById('cEstado').value,
+    estado: 'vigente',
+    renovacion_automatica: document.getElementById('cRenovacion').value === 'true',
+    periodo_meses: mesesEntre(document.getElementById('cInicio').value, document.getElementById('cVencimiento').value),
     archivo_url: norm(document.getElementById('cArchivo').value) || null,
     notas: norm(document.getElementById('cNotas').value) || null
   };
@@ -1052,6 +1081,18 @@ document.getElementById('formContrato').addEventListener('submit', async e => {
       return;
     }
     payload.archivo_path = ruta;
+  }
+
+  const plantilla = document.getElementById('cPlantillaFile').files[0];
+  if(payload.renovacion_automatica && !plantilla && !id){
+    avisar('Adjunta la plantilla Word para la renovación automática', true);
+    btnGuardar.disabled = false; btnGuardar.textContent = textoOriginal; return;
+  }
+  if(plantilla){
+    const rutaPlantilla = `${cliente_id}/plantillas/${Date.now()}-${plantilla.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;
+    const { error: errorPlantilla } = await sb.storage.from('contratos').upload(rutaPlantilla, plantilla, { upsert:false });
+    if(errorPlantilla){ avisar('No se pudo subir la plantilla: '+errorPlantilla.message,true); btnGuardar.disabled=false; btnGuardar.textContent=textoOriginal; return; }
+    payload.plantilla_path = rutaPlantilla;
   }
 
   btnGuardar.textContent = 'Guardando…';
@@ -1104,7 +1145,7 @@ async function pintarResponsables(clienteId){
     : `<p style="font-size:12.5px;color:var(--tenue)">Sin responsables asignados todavía.</p>`;
 
   cont.querySelectorAll('[data-quitar]').forEach(el => el.onclick = async () => {
-    const { error } = await sb.from('contrato_responsables').delete().eq('id', el.dataset.quitar);
+    const { error } = await sb.from('contrato_contactos').delete().eq('id', el.dataset.quitar);
     if(error){ avisar('No se pudo quitar: ' + error.message, true); return; }
     pintarResponsables(clienteId);
   });
@@ -1117,7 +1158,7 @@ document.getElementById('formResp').addEventListener('submit', async e => {
   e.preventDefault();
   const nombre = norm(document.getElementById('respNombre').value) || null;
   const email = norm(document.getElementById('respEmail').value);
-  const { error } = await sb.from('contrato_responsables').insert({ cliente_id: clienteRespActual, nombre, email });
+  const { error } = await sb.from('contrato_contactos').insert({ cliente_id: clienteRespActual, rol:'cliente', nombre, email });
   if(error){ avisar('No se pudo agregar: ' + error.message, true); return; }
   document.getElementById('formResp').reset();
   pintarResponsables(clienteRespActual);
@@ -1129,18 +1170,40 @@ document.getElementById('modalProyecto').addEventListener('click', e => { if(e.t
 
 document.getElementById('formProyecto').addEventListener('submit', async e => {
   e.preventDefault();
+  if(!BACKEND_RENOVACIONES){ avisar('Primero debe aplicarse la migración de renovaciones en Supabase',true); return; }
   const nombre = norm(document.getElementById('pNombre').value);
   const { data, error } = await sb.from('clientes').insert({ nombre }).select('id,nombre').single();
   if(error){ avisar('No se pudo crear el proyecto: ' + error.message, true); return; }
+  const emailsCliente = document.getElementById('pClienteEmails').value.split(/[\n,;]+/).map(norm).filter(Boolean);
+  const contactos = [
+    {cliente_id:data.id,rol:'lider',nombre:norm(document.getElementById('pLiderNombre').value),cedula:norm(document.getElementById('pLiderCedula').value),email:norm(document.getElementById('pLiderEmail').value)},
+    {cliente_id:data.id,rol:'jefe',nombre:norm(document.getElementById('pJefeNombre').value),cedula:norm(document.getElementById('pJefeCedula').value),email:norm(document.getElementById('pJefeEmail').value)},
+    ...emailsCliente.map(email=>({cliente_id:data.id,rol:'cliente',nombre:null,cedula:null,email}))
+  ];
+  const { error:errorContactos } = await sb.from('contrato_contactos').insert(contactos);
+  if(errorContactos){
+    await sb.from('clientes').delete().eq('id',data.id);
+    avisar('No se pudo guardar la información de líder, jefe y cliente: '+errorContactos.message,true); return;
+  }
   CLIENTES.push(data);
   CLIENTES.sort((a,b) => a.nombre.localeCompare(b.nombre));
   llenarSelectClientes();
   pintarChips();
   document.getElementById('cCliente').value = data.id;
-  document.getElementById('pNombre').value = '';
+  e.target.reset();
   document.getElementById('modalProyecto').classList.remove('on');
   avisar('Proyecto creado: ' + data.nombre);
 });
+
+async function procesarAprobacionDesdeEnlace(){
+  const p=new URLSearchParams(location.search), token=p.get('aprobacion'), decision=p.get('decision');
+  if(!token || !['aprobar','rechazar'].includes(decision)) return;
+  const { data,error }=await sb.rpc('registrar_aprobacion',{token,decision:decision==='aprobar'});
+  history.replaceState({},'',location.pathname);
+  if(error){ alert('No fue posible registrar la decisión: '+error.message); return; }
+  alert(decision==='aprobar' ? 'Aprobación registrada correctamente.' : 'Renovación rechazada. Se notificará al equipo responsable.');
+}
+procesarAprobacionDesdeEnlace();
 
 document.addEventListener('keydown', e => {
   if(e.key === 'Escape'){
