@@ -260,6 +260,65 @@
     .grid2{grid-template-columns:1fr}
     .enc-proy .resp{margin-left:0}
   }
+
+  /* ── Dirección visual ejecutiva ── */
+  :root{
+    --bg:#0B1619;--bg2:#102327;--tarjeta:#13272B;--linea:#294247;--linea-suave:#20383D;
+    --tinta:#F6F1E7;--tinta-suave:#B8C4C2;--tenue:#819391;
+    --acento:#D8FF3E;--acento-claro:#E5FF78;--acento-fondo:#20362D;
+  }
+  body{
+    background:
+      radial-gradient(circle at 82% 4%,rgba(216,255,62,.12),transparent 27%),
+      radial-gradient(circle at 12% 90%,rgba(15,121,105,.22),transparent 35%),
+      linear-gradient(145deg,var(--bg),var(--bg2));
+  }
+  header{background:rgba(11,22,25,.9);border-bottom-color:#284046;padding:18px 30px}
+  .marca img{width:44px;height:44px;border-radius:13px;box-shadow:0 0 0 1px #385156}
+  .marca h1{font-size:19px;color:#fff}.marca p{color:#80918F}
+  .cifras{background:#13292B;border-color:#2D4748;border-radius:16px}
+  .cifra{border-color:#2D4748}.cifra b{color:var(--acento)}.cifra span{color:#8FA6A2}
+  .cifra.aviso b{color:#FFC857}.cifra.alerta b{color:#FF6B63}
+  .btn-primario,.btn-principal,.form-inline button{background:var(--acento);color:#102014}
+  .btn-primario:hover,.btn-principal:hover,.form-inline button:hover{background:var(--acento-claro)}
+  .btn-sec,.chip,.buscador input,.campo input,.campo select,.campo textarea,.modal-btns button,.acciones button{
+    background:#14272B;border-color:#30474C;color:var(--tinta-suave)
+  }
+  .chip.on{background:var(--acento);border-color:var(--acento);color:#102014}
+  .buscador input:focus,.campo input:focus,.campo select:focus,.campo textarea:focus{box-shadow:0 0 0 3px rgba(216,255,62,.13)}
+  main{max-width:1440px;padding-top:32px}
+  .enc-proy{padding-bottom:12px;border-bottom:1px solid #294147}.avatar{background:var(--acento);color:#102014}
+  .enc-proy .n{color:#fff;font-size:18px}.enc-proy .resp{background:#14272B;border-color:#30474C}
+  .rejilla{grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:20px}
+  .tarjeta{
+    background:linear-gradient(155deg,#172F34,#112529);border:1px solid #2B454A;border-radius:20px;
+    padding:20px;min-height:235px;box-shadow:0 18px 40px -28px #000;cursor:pointer;
+  }
+  .tarjeta::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--acento);opacity:.8}
+  .tarjeta:hover{transform:translateY(-4px);border-color:#587069;box-shadow:0 24px 48px -25px #000}
+  .tarjeta h3{color:#fff;font-size:17px}.tarjeta .contraparte{color:#91A19F}.meta b{color:#F6F1E7}
+  .acciones button{border-radius:11px}.acciones button:hover{color:var(--acento);border-color:var(--acento)}
+  .badge.vigente{color:#75E7AE;background:#173E31}.badge.por_vencer{color:#FFD36C;background:#493A1C}
+  .badge.urgente{color:#FFAE70;background:#4D2C1E}.badge.critico{color:#FF8B83;background:#492424}
+  .badge.vencido{background:#C4423D}.badge.renovado{color:#8EBEFF;background:#203850}.badge.terminado{color:#C0C5C5;background:#303B3D}
+  .modal-fondo{background:rgba(3,9,11,.76)}.modal-caja{background:#12262A;border-color:#365057}
+  .fila-resp{background:#172D31}.toast{background:var(--acento);border-color:var(--acento);color:#102014}
+
+  /* Panel de detalle */
+  .detalle-fondo{justify-content:flex-end;align-items:stretch;padding:0}
+  .detalle-panel{width:min(720px,100%);min-height:100vh;background:#0F2226;border-left:1px solid #345057;padding:0;overflow:auto;animation:entrarPanel .25s ease}
+  @keyframes entrarPanel{from{transform:translateX(35px);opacity:0}to{transform:none;opacity:1}}
+  .detalle-cab{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:22px 26px;background:rgba(15,34,38,.94);backdrop-filter:blur(12px);border-bottom:1px solid #294247}
+  .detalle-cab span{font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--acento)}
+  .detalle-cerrar{width:38px;height:38px;border-radius:50%;border:1px solid #365057;background:#152D31;color:#fff;cursor:pointer}
+  .detalle-contenido{padding:28px 28px 45px}.detalle-titulo{font:700 31px/1.15 'Source Serif 4',serif;margin:0 0 9px;color:#fff}
+  .detalle-sub{color:#93A4A1;margin-bottom:24px}.detalle-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:22px 0}
+  .detalle-dato{padding:15px;border:1px solid #294247;border-radius:14px;background:#13292D}.detalle-dato small{display:block;color:#7F9290;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}.detalle-dato b{color:#fff;font-size:14px}
+  .detalle-notas{padding:18px;border-left:3px solid var(--acento);background:#152B2E;border-radius:0 14px 14px 0;color:#C8D2D0;line-height:1.55;margin:20px 0}
+  .doc-cab{display:flex;align-items:center;justify-content:space-between;margin:30px 0 12px}.doc-cab h3{margin:0;color:#fff;font:700 17px 'Manrope',sans-serif}.doc-cab a{color:var(--acento);font-size:12px;font-weight:800}
+  .doc-marco{height:480px;border:1px solid #365057;border-radius:16px;overflow:hidden;background:#091619}.doc-marco iframe,.doc-marco img{display:block;width:100%;height:100%;border:0;object-fit:contain}.doc-vacio{height:180px;display:grid;place-items:center;text-align:center;color:#7F9290;padding:25px;border:1px dashed #365057;border-radius:16px}
+  .detalle-acciones{display:flex;gap:10px;margin-top:24px}.detalle-acciones button{flex:1;padding:12px;border-radius:12px;font-weight:800;cursor:pointer}.detalle-editar{background:var(--acento);color:#102014;border:0}.detalle-cerrar2{background:#152D31;color:#B8C4C2;border:1px solid #365057}
+  @media(max-width:760px){.detalle-grid{grid-template-columns:1fr}.detalle-contenido{padding:22px 18px 36px}.detalle-titulo{font-size:26px}.doc-marco{height:390px}}
 </style>
 </head>
 <body>
@@ -447,6 +506,17 @@
       </div>
     </form>
   </div>
+</div>
+
+<!-- ══════════════ DETALLE EJECUTIVO DEL CONTRATO ══════════════ -->
+<div class="modal-fondo detalle-fondo" id="modalDetalle">
+  <aside class="detalle-panel" role="dialog" aria-modal="true" aria-labelledby="detalleTitulo">
+    <div class="detalle-cab">
+      <span>Ficha del contrato</span>
+      <button class="detalle-cerrar" id="cerrarDetalle" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="detalle-contenido" id="detalleContenido"></div>
+  </aside>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -662,6 +732,66 @@ function tarjeta(c){
   </article>`;
 }
 
+function etiquetaEstado(c){
+  return ETIQUETAS_ESTADO[c.estado_visual] || ETIQUETAS_ESTADO[c.estado] || 'Sin estado';
+}
+
+async function urlDocumento(c){
+  if(c.archivo_path){
+    const { data, error } = await sb.storage.from('contratos').createSignedUrl(c.archivo_path, 900);
+    if(error) throw error;
+    return data.signedUrl;
+  }
+  return c.archivo_url || '';
+}
+
+function visorDocumento(url, c){
+  if(!url) return `<div class="doc-vacio"><div><b>Sin documento adjunto</b><br><small>El archivo puede agregarse desde “Editar contrato”.</small></div></div>`;
+  const origen = (c.archivo_path || url).split('?')[0].toLowerCase();
+  if(/\.(png|jpe?g|gif|webp)$/.test(origen)) return `<div class="doc-marco"><img src="${escapar(url)}" alt="Documento del contrato"></div>`;
+  if(/\.(doc|docx|xls|xlsx|ppt|pptx)$/.test(origen)){
+    const office = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+    return `<div class="doc-marco"><iframe src="${office}" title="Documento del contrato"></iframe></div>`;
+  }
+  return `<div class="doc-marco"><iframe src="${escapar(url)}" title="Documento del contrato"></iframe></div>`;
+}
+
+async function abrirDetalle(id){
+  const c = CONTRATOS.find(x => x.id === id);
+  if(!c) return;
+  const modal = document.getElementById('modalDetalle');
+  const cont = document.getElementById('detalleContenido');
+  modal.classList.add('on');
+  document.body.style.overflow = 'hidden';
+  cont.innerHTML = `<div class="esqueleto"></div><div class="esqueleto" style="margin-top:16px;height:360px"></div>`;
+  let docUrl = '';
+  try{ docUrl = await urlDocumento(c); }
+  catch(e){ avisar('No se pudo cargar el documento: ' + e.message, true); }
+  cont.innerHTML = `
+    <span class="badge ${c.estado_visual}">${escapar(textoBadge(c))}</span>
+    <h2 class="detalle-titulo" id="detalleTitulo">${escapar(c.nombre)}</h2>
+    <div class="detalle-sub">${escapar(c.proyecto || '')}${c.contraparte ? ` · ${escapar(c.contraparte)}` : ''}</div>
+    <div class="detalle-grid">
+      <div class="detalle-dato"><small>Estado</small><b>${escapar(etiquetaEstado(c))}</b></div>
+      <div class="detalle-dato"><small>Valor contractual</small><b>${formatoValor(c.valor,c.moneda)}</b></div>
+      <div class="detalle-dato"><small>Fecha de inicio</small><b>${c.fecha_inicio ? formatoFecha(c.fecha_inicio) : 'No registrada'}</b></div>
+      <div class="detalle-dato"><small>Fecha de vencimiento</small><b>${formatoFecha(c.fecha_vencimiento)}</b></div>
+      <div class="detalle-dato"><small>Proyecto</small><b>${escapar(c.proyecto || 'Sin proyecto')}</b></div>
+      <div class="detalle-dato"><small>Contraparte</small><b>${escapar(c.contraparte || 'No registrada')}</b></div>
+    </div>
+    ${c.notas ? `<div class="detalle-notas"><b>Notas y alcance</b><br>${escapar(c.notas)}</div>` : ''}
+    <div class="doc-cab"><h3>Documento contractual</h3>${docUrl ? `<a href="${escapar(docUrl)}" target="_blank" rel="noopener">Abrir en otra pestaña ↗</a>` : ''}</div>
+    ${visorDocumento(docUrl,c)}
+    <div class="detalle-acciones"><button class="detalle-cerrar2" id="detalleVolver">Cerrar</button><button class="detalle-editar" id="detalleEditar">Editar contrato</button></div>`;
+  document.getElementById('detalleVolver').onclick = cerrarDetalle;
+  document.getElementById('detalleEditar').onclick = () => { cerrarDetalle(); abrirModalContrato(c.id); };
+}
+
+function cerrarDetalle(){
+  document.getElementById('modalDetalle').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
 function pintar(){
   const lista = filtrar();
   const cont = document.getElementById('contenido');
@@ -715,10 +845,16 @@ function pintar(){
     }
   });
   cont.querySelectorAll('[data-resp]').forEach(el => el.onclick = () => abrirModalResponsables(el.dataset.resp));
+  cont.querySelectorAll('.tarjeta').forEach(el => el.onclick = e => {
+    if(e.target.closest('button,a')) return;
+    abrirDetalle(el.dataset.id);
+  });
 }
 
 document.getElementById('busqueda').addEventListener('input', e => { estado.q = e.target.value; pintar(); });
 document.getElementById('btnRefrescar').onclick = cargarTodo;
+document.getElementById('cerrarDetalle').onclick = cerrarDetalle;
+document.getElementById('modalDetalle').addEventListener('click', e => { if(e.target.id === 'modalDetalle') cerrarDetalle(); });
 
 /* ══════════════ MODAL CONTRATO ══════════════ */
 function abrirModalContrato(id){
@@ -912,7 +1048,7 @@ document.getElementById('formProyecto').addEventListener('submit', async e => {
 
 document.addEventListener('keydown', e => {
   if(e.key === 'Escape'){
-    cerrarModalContrato(); cerrarModalResponsables();
+    cerrarModalContrato(); cerrarModalResponsables(); cerrarDetalle();
     document.getElementById('modalProyecto').classList.remove('on');
   }
 });
